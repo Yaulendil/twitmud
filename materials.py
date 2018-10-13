@@ -1,9 +1,9 @@
 """
-MATERIALS provide the BASE VALUE of an object, as well as its stats.
+MATERIALS provide the BASE VALUE of an object, as well as its physical stats.
 An object can be made from any material which has all the required stats for the object type.
 """
 
-METAL = {"Iron":{ # "Standard" metal, quite balanced
+METAL = ({"Iron":{ # "Standard" metal, quite balanced
              "Value":10, # Monetary worth of the material
              "Density":10, # How much mass is in a given volume; Weapon weight
              "Hardness":10, # How well a weapon maintains shape; Aids sharpness
@@ -59,7 +59,16 @@ METAL = {"Iron":{ # "Standard" metal, quite balanced
              "Hardness":10,
              "Toughness":10,
              "Flexibility":10
-             }}
+             }},
+         [0.25,
+          0.2,
+          0.1,
+          0.2,
+          0.1,
+          0.05,
+          0.05,
+          0.02,
+          0.03])
 
 WOOD = {}
 
@@ -68,9 +77,11 @@ GEMSTONE = {}
 TEXTILE = {}
 
 GLASS = {"Glass":{
-             "Value":3},
+             "Value":3,
+             "Toughness":1},
          "Crystal":{
-             "Value":7}}
+             "Value":7,
+             "Toughness":1}}
 
 
 
