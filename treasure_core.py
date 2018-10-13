@@ -3,6 +3,10 @@ from numpy import random as npr
 
 from grammar import Pluralize, GetA, SequenceWords
 
+def FormOut(txt,pad="",angle=False):
+    ang = {True:"\\",False:"|"}[angle]
+    return f"\n{pad}{ang}_'{txt}'"
+
 def SetValue(obj, attr, value):
     exec(f"obj.{attr} = value")
 
@@ -36,10 +40,10 @@ def randAttr(obj, attr):
         q = random.randint(strt,stop)
         vals = RandomFrom(poss,q)
         if strt == 1 and stop == 1:
-            obj.attrDict.update({attr:vals[0]})
+            obj.dictAttr.update({attr:vals[0]})
             SetValue(obj, attr, vals[0])
         else:
-            obj.attrDict.update({attr:vals})
+            obj.dictAttr.update({attr:vals})
             SetValue(obj, attr, vals)
 
 def randTrait(obj, trait):
@@ -49,7 +53,7 @@ def randTrait(obj, trait):
         poss = obj.traits[trait] # Possible values (list or dict)
         #val = random.sample(poss,1)[0]
         val = RandomFrom(poss,None)
-        obj.traitDict.update({trait:val})
+        obj.dictTrait.update({trait:val})
         SetValue(obj, trait, val)
 
 def randomize(obj, feat=None, r=False):
@@ -67,8 +71,8 @@ def randomize(obj, feat=None, r=False):
         if feat in obj.traits:
             randTrait(obj,feat)
     if r:
-        for sub in obj.compDict:
-            randomize(obj.compDict[sub], feat, r)
+        for sub in obj.dictComp:
+            randomize(obj.dictComp[sub], feat, r)
 
 
 class TreasureObject:
@@ -82,9 +86,9 @@ class TreasureObject:
     BaseType = "item"
 
     def __init__(self, *args, **kwargs):
-        self.attrDict = {}
-        self.traitDict = {}
-        self.compDict = {}
+        self.dictAttr = {}
+        self.dictTrait = {}
+        self.dictComp = {}
         self.parent = None
 
         self.Value = 0
@@ -92,7 +96,7 @@ class TreasureObject:
 
         for comp in self.components:
             c = self.components[comp]()
-            self.compDict.update({comp:c})
+            self.dictComp.update({comp:c})
             c.parent = self
             SetValue(self,comp,c)
         #for attr in self.attrs:
@@ -111,32 +115,38 @@ class TreasureObject:
         #if solo:
             #o = o + f"This is a {self}."
         #p1 = pad + " "
-        #for q in self.attrDict:
-            #o = o + f" Its {q} is {self.attrDict[q]}."
-        #for q in self.traitDict:
-            #o = o + f"\nIts {q} is {self.traitDict[q]}."
+        #for q in self.dictAttr:
+            #o = o + f" Its {q} is {self.dictAttr[q]}."
+        #for q in self.dictTrait:
+            #o = o + f"\nIts {q} is {self.dictTrait[q]}."
         #return o
 
     #def describe(self, solo=True, pad=""):
         #o = self.desc(solo,pad)
         #p4 = pad + "    "
-        #for q in self.compDict:
-            #o += "\n" + self.compDict[q].describe(False,p4)
+        #for q in self.dictComp:
+            #o += "\n" + self.dictComp[q].describe(False,p4)
         #return o
 
     def describe(self, solo=True, pad=""):
         o = ""
         if solo:
             o += pad + f"'This is {self}.'"
-        for a in self.attrDict: # Print object attributes (variable number)
-            aa = SequenceWords(self.attrDict[a])
+        for a in self.dictAttr: # Print object attributes (variable number)
+            aa = SequenceWords(self.dictAttr[a])
             if aa != "":
-                o += f"\n{pad}| 'Its {a.lower()} is {aa}.'"
-        for a in self.traitDict: # Print object traits (one of each)
-            o += f"\n{pad}| 'Its {a.lower()} is {self.traitDict[a]}.'"
-        for a in self.compDict: # Describe sub-objects
-            o += f"\n{pad}\\ 'Its {a.lower()} is {self.compDict[a]}.'"
-            o += self.compDict[a].describe(solo=False, pad = pad + "-")
+                o += FormOut(f"Its {a.lower()} is {aa}.",pad)
+        for a in self.dictTrait: # Print object traits (one of each)
+            if a != "Material":
+                o += FormOut(f"Its {a.lower()} is {self.dictTrait[a]}.",pad)
+        for a in self.dictComp: # Describe sub-objects
+            aa = self.dictComp[a]
+            try:
+                mat = aa.dictTrait["Material"]
+                o += FormOut(f"Its {a.lower()} is {self.dictComp[a]} of {mat}.",pad,True)
+            except:
+                o += FormOut(f"Its {a.lower()} is {self.dictComp[a]}.",pad,True)
+            o += self.dictComp[a].describe(solo=False, pad = pad + "|")
 
 
         return o
