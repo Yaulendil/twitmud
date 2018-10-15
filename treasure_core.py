@@ -3,6 +3,10 @@ from numpy import random as npr
 
 from grammar import Pluralize, GetA, SequenceWords
 
+# Traits NOT to list (normally) in *.describe()
+NoDescribe = ["Material"]
+
+
 def FormOut(txt,pad="",angle=False):
     ang = {True:"\\",False:"|"}[angle]
     return f"\n{pad}{ang}_'{txt}'"
@@ -13,7 +17,7 @@ def SetValue(obj, attr, value):
 def GetValue(obj, attr):
     return eval(f"obj.{attr}")
 
-def RandomFrom(src,q=1,d=None):
+def RandomFrom(src,q=1,d=None,dd=None):
     # q = Desired number of elements from src
     # dist = probability distribution
     st = type(src)
@@ -23,10 +27,15 @@ def RandomFrom(src,q=1,d=None):
         d = src[1]
         src = src[0]
         st = type(src)
+    elif dd and not d:
+        try:
+            d = [dd[k] for k in src]
+        except:
+            d = None
     if st == dict:
         src = list(src.keys())
         st = type(src)
-    if st == list or st == range: # SRC is one-dimensional? Pick from it.
+    if st == list or st == range:  # SRC is one-dimensional? Pick from it.
         ret = npr.choice(src,size=q,replace=False,p=d).tolist()
     return ret
 
@@ -34,9 +43,9 @@ def randAttr(obj, attr):
     try:
         assert GetValue(obj,attr) == None
     except:
-        strt = obj.attrs[attr][0] # Minimum number of values
-        stop = obj.attrs[attr][1] # Maximum number of values
-        poss = obj.attrs[attr][2] # Possible values (list or dict)
+        strt = obj.attrs[attr][0]  # Minimum number of values
+        stop = obj.attrs[attr][1]  # Maximum number of values
+        poss = obj.attrs[attr][2]  # Possible values (list or dict)
         q = random.randint(strt,stop)
         vals = RandomFrom(poss,q)
         if strt == 1 and stop == 1:
@@ -85,6 +94,11 @@ class TreasureObject:
     TreasureType = "Generic Treasure"
     BaseType = "item"
 
+    dmg_FX = {"phys":["chipped","cracked","broken"], # Damage FX; Adjectives applied when item is damaged
+              "burn":["singed","charred","melted"]}
+    aes_FX = {"cold":["frosty","frozen"], # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
+              "blod":["blood-speckled","blood-spattered","bloody","bloodsoaked","sanguinated"]}
+
     def __init__(self, *args, **kwargs):
         self.dictAttr = {}
         self.dictTrait = {}
@@ -94,41 +108,33 @@ class TreasureObject:
         self.Value = 0
         self.TreasureLabel = None
 
+        self.HP = 100
+        self.dmg = {x:0 for x in list(self.dmg_FX)}
+        self.aes = {x:0 for x in list(self.aes_FX)}
+
         for comp in self.components:
             c = self.components[comp]()
             self.dictComp.update({comp:c})
             c.parent = self
-            SetValue(self,comp,c)
-        #for attr in self.attrs:
-            #SetValue(self,attr,None)
+            #SetValue(self,comp,c)
         randomize(self)
+        #self.__str__ = self.strself
         #self.Appraise()
 
-    def __str__(self, *, UseGeneric=False):
+    def GetAdj(self):
+        return ""
+
+    def strself(self, *, UseGeneric=False, Adjectives=[]):
         generic = GetA(str(self.TreasureType),True)
         if UseGeneric:
-            return generic
-        return self.TreasureLabel or generic
+            n = generic
+        n = self.TreasureLabel or generic
+        return self.GetAdj() + n
 
-    #def desc(self, solo=True, pad=""):
-        #o = ""
-        #if solo:
-            #o = o + f"This is a {self}."
-        #p1 = pad + " "
-        #for q in self.dictAttr:
-            #o = o + f" Its {q} is {self.dictAttr[q]}."
-        #for q in self.dictTrait:
-            #o = o + f"\nIts {q} is {self.dictTrait[q]}."
-        #return o
+    def __str__(self):
+        return self.strself()
 
-    #def describe(self, solo=True, pad=""):
-        #o = self.desc(solo,pad)
-        #p4 = pad + "    "
-        #for q in self.dictComp:
-            #o += "\n" + self.dictComp[q].describe(False,p4)
-        #return o
-
-    def describe(self, solo=True, pad=""):
+    def describe(self, solo=True, pad="", full=False):
         o = ""
         if solo:
             o += pad + f"'This is {self}.'"
@@ -137,16 +143,20 @@ class TreasureObject:
             if aa != "":
                 o += FormOut(f"Its {a.lower()} is {aa}.",pad)
         for a in self.dictTrait: # Print object traits (one of each)
-            if a != "Material":
+            if a not in NoDescribe:
                 o += FormOut(f"Its {a.lower()} is {self.dictTrait[a]}.",pad)
         for a in self.dictComp: # Describe sub-objects
             aa = self.dictComp[a]
+            adesc = aa.describe(solo=False, pad = pad + "|", full=full)
             try:
                 mat = aa.dictTrait["Material"]
+                #if len(aa.dictTrait) <= 1:
+                if adesc.count("\n") < 1 and not full:
+                    continue
                 o += FormOut(f"Its {a.lower()} is {self.dictComp[a]} of {mat}.",pad,True)
             except:
                 o += FormOut(f"Its {a.lower()} is {self.dictComp[a]}.",pad,True)
-            o += self.dictComp[a].describe(solo=False, pad = pad + "|")
+            o += adesc
 
 
         return o

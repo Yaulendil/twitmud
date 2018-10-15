@@ -6,19 +6,21 @@ Function library for grammatical correctness
 def Pluralize(n,p="s",s="",w=""):
     return w+{True:p,False:s}[n!=1]
 
+
 def GetA(word,include=False):
-    first = word.lower()[0]
+    first = word.lstrip().lower()[0]
     b = ""
     if include:
-        b = " " + word
+        b = " " + word.lstrip()
     if first in "aeiou":
         return "an"+b
     else:
         return "a"+b
 
+
 def SequenceWords(words, o=""):
     o1 = ""
-    #print(f"Sequencing '{words}'")
+    # print(f"Sequencing '{words}'")
     if len(words) == 0:
         pass
     elif len(words) == 1:

@@ -72,7 +72,18 @@ MetalDist = {"Iron":0.25, # Probability for each material to be selected; Must s
              "Mithril":0.02,
              "Adamantium":0.03}
 
-WOOD = {}
+WOOD = {"Oak":{
+               "Value":3,
+               "Toughness":6},
+        "Pine":{
+               "Value":4,
+               "Toughness":5},
+        "Mahogany":{
+               "Value":8,
+               "Toughness":8},
+        "Balsa":{
+               "Value":2,
+               "Toughness":3},}
 
 GEMSTONE = {}
 
