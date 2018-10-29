@@ -1,23 +1,26 @@
 import random
 from numpy import random as npr
 
-from grammar import Pluralize, GetA, SequenceWords
+from grammar import pluralize, get_a, sequence_words
 
 # Traits NOT to list (normally) in *.describe()
 NoDescribe = ["Material"]
 
 
-def FormOut(txt,pad="",angle=False):
-    ang = {True:"\\",False:"|"}[angle]
+def form_out(txt, pad="", angle=False):
+    ang = {True: "\\", False: "|"}[angle]
     return f"\n{pad}{ang}_'{txt}'"
 
-def SetValue(obj, attr, value):
+
+def set_value(obj, attr, value):
     exec(f"obj.{attr} = value")
 
-def GetValue(obj, attr):
+
+def get_value(obj, attr):
     return eval(f"obj.{attr}")
 
-def RandomFrom(src,q=1,d=None,dd=None):
+
+def random_from(src, q=1, d=None, dd=None):
     # q = Desired number of elements from src
     # dist = probability distribution
     st = type(src)
@@ -36,39 +39,42 @@ def RandomFrom(src,q=1,d=None,dd=None):
         src = list(src.keys())
         st = type(src)
     if st == list or st == range:  # SRC is one-dimensional? Pick from it.
-        ret = npr.choice(src,size=q,replace=False,p=d).tolist()
+        ret = npr.choice(src, size=q, replace=False, p=d).tolist()
     return ret
 
-def randAttr(obj, attr):
+
+def rand_attr(obj, attr):
     try:
-        assert GetValue(obj,attr) == None
+        assert get_value(obj, attr) == None
     except:
         strt = obj.attrs[attr][0]  # Minimum number of values
         stop = obj.attrs[attr][1]  # Maximum number of values
         poss = obj.attrs[attr][2]  # Possible values (list or dict)
-        q = random.randint(strt,stop)
-        vals = RandomFrom(poss,q)
+        q = random.randint(strt, stop)
+        vals = random_from(poss, q)
         if strt == 1 and stop == 1:
-            obj.dictAttr.update({attr:vals[0]})
-            SetValue(obj, attr, vals[0])
+            obj.dictAttr.update({attr: vals[0]})
+            set_value(obj, attr, vals[0])
         else:
-            obj.dictAttr.update({attr:vals})
-            SetValue(obj, attr, vals)
+            obj.dictAttr.update({attr: vals})
+            set_value(obj, attr, vals)
 
-def randTrait(obj, trait):
+
+def rand_trait(obj, trait):
     try:
-        assert GetValue(obj,trait) == None
+        assert get_value(obj, trait) == None
     except:
-        poss = obj.traits[trait] # Possible values (list or dict)
-        #val = random.sample(poss,1)[0]
-        val = RandomFrom(poss,None)
-        obj.dictTrait.update({trait:val})
-        SetValue(obj, trait, val)
+        poss = obj.traits[trait]  # Possible values (list or dict)
+        # val = random.sample(poss,1)[0]
+        val = random_from(poss, None)
+        obj.dictTrait.update({trait: val})
+        set_value(obj, trait, val)
+
 
 def randomize(obj, feat=None, r=False):
     """Assign all unset attributes, or the given attribute, of an object or component to random possible values.\nIf [r]ecursive, do so for all components as well."""
-    #if not feat in obj.attrs:
-        #return
+    # if not feat in obj.attrs:
+    # return
     if feat == None:
         for feat2 in obj.attrs:
             randomize(obj, feat2)
@@ -76,28 +82,51 @@ def randomize(obj, feat=None, r=False):
             randomize(obj, feat2)
     else:
         if feat in obj.attrs:
-            randAttr(obj,feat)
+            rand_attr(obj, feat)
         if feat in obj.traits:
-            randTrait(obj,feat)
+            rand_trait(obj, feat)
     if r:
         for sub in obj.dictComp:
             randomize(obj.dictComp[sub], feat, r)
 
 
 class TreasureObject:
-    attrs = {} # ATTRIBUTES: Flavor modifiers, no effect; Any number of a certain attribute type
+    attrs = (
+        {}
+    )  # ATTRIBUTES: Flavor modifiers, no effect; Any number of a certain attribute type
     # A value in attrs MUST be: a TUPLE or LIST containing: INT1, INT2, LIST1
     # A value in the ATTRDICT of an instance of this class will then be:
     #     - a LIST containing between INT1 and INT2, inclusive, elements from LIST1
-    traits = {} # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given trait
-    components = {} # COMPONENTS: Sub-objects that make up this object; Should be class name
+    traits = (
+        {}
+    )  # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given trait
+    components = (
+        {}
+    )  # COMPONENTS: Sub-objects that make up this object; Should be class name
     TreasureType = "Generic Treasure"
     BaseType = "item"
 
-    dmg_FX = {"phys":["chipped","cracked","broken"], # Damage FX; Adjectives applied when item is damaged
-              "burn":["singed","charred","melted"]}
-    aes_FX = {"cold":["frosty","frozen"], # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
-              "blod":["blood-speckled","blood-spattered","bloody","bloodsoaked","sanguinated"]}
+    dmg_FX = {
+        "phys": [
+            "chipped",
+            "cracked",
+            "broken",
+        ],  # Damage FX; Adjectives applied when item is damaged
+        "burn": ["singed", "charred", "melted"],
+    }
+    aes_FX = {
+        "cold": [
+            "frosty",
+            "frozen",
+        ],  # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
+        "blod": [
+            "blood-speckled",
+            "blood-spattered",
+            "bloody",
+            "bloodsoaked",
+            "sanguinated",
+        ],
+    }
 
     def __init__(self, *args, **kwargs):
         self.dictAttr = {}
@@ -109,23 +138,23 @@ class TreasureObject:
         self.TreasureLabel = None
 
         self.HP = 100
-        self.dmg = {x:0 for x in list(self.dmg_FX)}
-        self.aes = {x:0 for x in list(self.aes_FX)}
+        self.dmg = {x: 0 for x in list(self.dmg_FX)}
+        self.aes = {x: 0 for x in list(self.aes_FX)}
 
         for comp in self.components:
             c = self.components[comp]()
-            self.dictComp.update({comp:c})
+            self.dictComp.update({comp: c})
             c.parent = self
-            #SetValue(self,comp,c)
+            # SetValue(self,comp,c)
         randomize(self)
-        #self.__str__ = self.strself
-        #self.Appraise()
+        # self.__str__ = self.strself
+        # self.Appraise()
 
     def GetAdj(self):
         return ""
 
     def strself(self, *, UseGeneric=False, Adjectives=[]):
-        generic = GetA(str(self.TreasureType),True)
+        generic = get_a(str(self.TreasureType), True)
         if UseGeneric:
             n = generic
         n = self.TreasureLabel or generic
@@ -138,30 +167,31 @@ class TreasureObject:
         o = ""
         if solo:
             o += pad + f"'This is {self}.'"
-        for a in self.dictAttr: # Print object attributes (variable number)
-            aa = SequenceWords(self.dictAttr[a])
+        for a in self.dictAttr:  # Print object attributes (variable number)
+            aa = sequence_words(self.dictAttr[a])
             if aa != "":
-                o += FormOut(f"Its {a.lower()} is {aa}.",pad)
-        for a in self.dictTrait: # Print object traits (one of each)
+                o += form_out(f"Its {a.lower()} is {aa}.", pad)
+        for a in self.dictTrait:  # Print object traits (one of each)
             if a not in NoDescribe:
-                o += FormOut(f"Its {a.lower()} is {self.dictTrait[a]}.",pad)
-        for a in self.dictComp: # Describe sub-objects
+                o += form_out(f"Its {a.lower()} is {self.dictTrait[a]}.", pad)
+        for a in self.dictComp:  # Describe sub-objects
             aa = self.dictComp[a]
-            adesc = aa.describe(solo=False, pad = pad + "|", full=full)
+            adesc = aa.describe(solo=False, pad=pad + "|", full=full)
             try:
                 mat = aa.dictTrait["Material"]
-                #if len(aa.dictTrait) <= 1:
+                # if len(aa.dictTrait) <= 1:
                 if adesc.count("\n") < 1 and not full:
                     continue
-                o += FormOut(f"Its {a.lower()} is {self.dictComp[a]} of {mat}.",pad,True)
+                o += form_out(
+                    f"Its {a.lower()} is {self.dictComp[a]} of {mat}.", pad, True
+                )
             except:
-                o += FormOut(f"Its {a.lower()} is {self.dictComp[a]}.",pad,True)
+                o += form_out(f"Its {a.lower()} is {self.dictComp[a]}.", pad, True)
             o += adesc
-
 
         return o
 
-    def clone(self,fulldata=True):
+    def clone(self, fulldata=True):
         """
         Create a clone of this object, but not necessarily with any non-obvious
             information maintained
@@ -171,5 +201,3 @@ class TreasureObject:
             history or given name of a historical sword
         """
         pass
-
-
