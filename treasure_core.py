@@ -22,7 +22,7 @@ def get_value(obj, attr):
 
 def random_from(src, q=1, d=None, dd=None):
     # q = Desired number of elements from src
-    # dist = probability distribution
+    # d = probability distribution
     st = type(src)
     ret = src
     if st == tuple and type(src[1]) == list:
@@ -43,51 +43,66 @@ def random_from(src, q=1, d=None, dd=None):
     return ret
 
 
-def rand_attr(obj, attr):
-    try:
-        assert get_value(obj, attr) == None
-    except:
-        strt = obj.attrs[attr][0]  # Minimum number of values
-        stop = obj.attrs[attr][1]  # Maximum number of values
-        poss = obj.attrs[attr][2]  # Possible values (list or dict)
-        q = random.randint(strt, stop)
-        vals = random_from(poss, q)
-        if strt == 1 and stop == 1:
-            obj.dictAttr.update({attr: vals[0]})
-            set_value(obj, attr, vals[0])
-        else:
-            obj.dictAttr.update({attr: vals})
-            set_value(obj, attr, vals)
+# def rand_attr(obj, attr):
+#     try:
+#         assert get_value(obj, attr) is None
+#     except:
+#         strt = obj.attrs[attr][0]  # Minimum number of values
+#         stop = obj.attrs[attr][1]  # Maximum number of values
+#         poss = obj.attrs[attr][2]  # Possible values (list or dict)
+#         q = random.randint(strt, stop)
+#         vals = random_from(poss, q)
+#         if strt == 1 and stop == 1:
+#             obj.dictAttr.update({attr: vals[0]})
+#             set_value(obj, attr, vals[0])
+#         else:
+#             obj.dictAttr.update({attr: vals})
+#             set_value(obj, attr, vals)
+#
+#
+# def rand_trait(obj, trait):
+#     try:
+#         assert get_value(obj, trait) is None
+#     except:
+#         poss = obj.traits[trait]  # Possible values (list or dict)
+#         # val = random.sample(poss,1)[0]
+#         val = random_from(poss, None)
+#         obj.dictTrait.update({trait: val})
+#         set_value(obj, trait, val)
+#
+#
+# def randomize(obj, feat=None, r=False):
+#     """Assign all unset attributes, or the given attribute, of an object or component to random possible values.\nIf [r]ecursive, do so for all components as well."""
+#     # if not feat in obj.attrs:
+#     # return
+#     if feat is None:
+#         for feat2 in obj.attrs:
+#             randomize(obj, feat2)
+#         for feat2 in obj.traits:
+#             randomize(obj, feat2)
+#     else:
+#         if feat in obj.attrs:
+#             rand_attr(obj, feat)
+#         if feat in obj.traits:
+#             rand_trait(obj, feat)
+#     if r:
+#         for sub in obj.dictComp:
+#             randomize(obj.dictComp[sub], feat, r)
 
 
-def rand_trait(obj, trait):
-    try:
-        assert get_value(obj, trait) == None
-    except:
-        poss = obj.traits[trait]  # Possible values (list or dict)
-        # val = random.sample(poss,1)[0]
-        val = random_from(poss, None)
-        obj.dictTrait.update({trait: val})
-        set_value(obj, trait, val)
-
-
-def randomize(obj, feat=None, r=False):
-    """Assign all unset attributes, or the given attribute, of an object or component to random possible values.\nIf [r]ecursive, do so for all components as well."""
-    # if not feat in obj.attrs:
-    # return
-    if feat == None:
-        for feat2 in obj.attrs:
-            randomize(obj, feat2)
-        for feat2 in obj.traits:
-            randomize(obj, feat2)
-    else:
-        if feat in obj.attrs:
-            rand_attr(obj, feat)
-        if feat in obj.traits:
-            rand_trait(obj, feat)
+def shuffle(obj, feat=None, r=False):
+    for attr, (amin, amax, poss) in obj.attrs.items():
+        if attr == feat or not feat:
+            q = random.randint(amin, amax)
+            selected = random_from(poss, q)
+            obj.dictAttr[attr] = selected
+    for trait, poss in obj.traits.items():
+        if trait == feat or not feat:
+            selected = random_from(poss)[0]
+            obj.dictTrait[trait] = selected
     if r:
-        for sub in obj.dictComp:
-            randomize(obj.dictComp[sub], feat, r)
+        for comp, obj2 in obj.dictComp.items():
+            shuffle(obj2, feat, r)
 
 
 class TreasureObject:
@@ -106,20 +121,23 @@ class TreasureObject:
     TreasureType = "Generic Treasure"
     BaseType = "item"
 
+    # Damage FX; Adjectives applied when item is damaged
     dmg_FX = {
         "phys": [
+            "dented",
             "chipped",
             "cracked",
             "broken",
-        ],  # Damage FX; Adjectives applied when item is damaged
+        ],
         "burn": ["singed", "charred", "melted"],
     }
+    # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
     aes_FX = {
         "cold": [
-            "frosty",
+            "frosted",
             "frozen",
-        ],  # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
-        "blod": [
+        ],
+        "blood": [
             "blood-speckled",
             "blood-spattered",
             "bloody",
@@ -146,19 +164,22 @@ class TreasureObject:
             self.dictComp.update({comp: c})
             c.parent = self
             # SetValue(self,comp,c)
-        randomize(self)
+        shuffle(self)
         # self.__str__ = self.strself
         # self.Appraise()
 
-    def GetAdj(self):
-        return ""
+    def get_adj(self):
+        return []
 
-    def strself(self, *, UseGeneric=False, Adjectives=[]):
+    def strself(self, *, use_generic=False, adjectives=None):
+        if adjectives is None:
+            adjectives = []
         generic = get_a(str(self.TreasureType), True)
-        if UseGeneric:
+        if use_generic:
             n = generic
         n = self.TreasureLabel or generic
-        return self.GetAdj() + n
+        adj = sequence_words(self.get_adj() + adjectives)
+        return " ".join([adj, n])
 
     def __str__(self):
         return self.strself()
@@ -179,6 +200,10 @@ class TreasureObject:
             adesc = aa.describe(solo=False, pad=pad + "|", full=full)
             try:
                 mat = aa.dictTrait["Material"]
+                try:
+                    mat = mat.Adjective
+                except:
+                    pass
                 # if len(aa.dictTrait) <= 1:
                 if adesc.count("\n") < 1 and not full:
                     continue
@@ -195,7 +220,7 @@ class TreasureObject:
         """
         Create a clone of this object, but not necessarily with any non-obvious
             information maintained
-        TODO/NOTE: If a user knowledge system is ever implemented, this could
+        NOTE: If a user knowledge system is ever implemented, this could
             be used to create a "knowledge model", an INCOMPLETE representation
             of the object which may still hold secrets; for example, the kill
             history or given name of a historical sword

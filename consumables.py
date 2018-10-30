@@ -1,5 +1,5 @@
 from treasure_core import TreasureObject
-
+import materials
 
 class Fluid(TreasureObject):
     attrs = {
@@ -53,6 +53,7 @@ class Fluid(TreasureObject):
         ],
         "Visual": ["opaque", "cloudy", "clear", "murky"],
         "Texture": ["thick", "thin", "lumpy", "smooth", "chunky", "pulpy"],
+        "Effect": ["strength", "weakness", "health", "poison", "fire", "speed", "slowness", "darkvision", "blindness"],
     }
     TreasureType = "unknown fluid"
     BaseType = "fluid"
@@ -83,7 +84,7 @@ class fluidWater(Fluid):
 class Bottle(TreasureObject):
     components = {"Content": Fluid}
     traits = {
-        "Material": ["glass", "crystal", "plastic"],
+        "Material": materials.Metal.decor,
         "Fullness": range(20, 100, 5),
         # "Vessel":["bottle","flask","vial"],
         "Shape": [

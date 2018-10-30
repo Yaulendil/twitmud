@@ -98,3 +98,130 @@ TEXTILE = {
 }
 
 GLASS = {"Glass": {"Value": 3, "Toughness": 1}, "Crystal": {"Value": 7, "Toughness": 1}}
+
+
+class Material:
+    Value = 100
+    Rarity = 100
+    Density = 100
+    Hardness = 100
+    Toughness = 100
+    Flexibility = 100
+
+    def __init__(self, amount):
+        self.amount = amount
+
+
+class Metal(Material):
+    pass
+
+
+class Iron(Metal):
+    Value = 100
+    Rarity = 100
+    Density = 100
+    Hardness = 100
+    Toughness = 100
+    Flexibility = 100
+
+
+class Steel(Metal):
+    Value = 100
+    Rarity = 100
+    Density = 130
+    Hardness = 100
+    Toughness = 200
+    Flexibility = 100
+
+
+class Brass(Metal):
+    Value = 100
+    Rarity = 100
+    Density = 100
+    Hardness = 100
+    Toughness = 100
+    Flexibility = 100
+
+
+class Bronze(Metal):
+    Value = 100
+    Rarity = 100
+    Density = 100
+    Hardness = 100
+    Toughness = 90
+    Flexibility = 100
+
+
+class Copper(Metal):
+    Value = 100
+    Rarity = 100
+    Density = 110
+    Hardness = 100
+    Toughness = 75
+    Flexibility = 100
+
+
+class Silver(Metal):
+    Value = 20000
+    Rarity = 1000
+    Density = 130
+    Hardness = 50
+    Toughness = 85
+    Flexibility = 100
+
+
+class Gold(Metal):
+    Value = 30000
+    Rarity = 10000
+    Density = 250
+    Hardness = 30
+    Toughness = 80
+    Flexibility = 100
+
+
+class Mithril(Metal):
+    Value = 200000
+    Rarity = 20000
+    Density = 25
+    Hardness = 400
+    Toughness = 200
+    Flexibility = 150
+
+
+class Adamantium(Metal):
+    Value = 200000
+    Rarity = 20000
+    Density = 300
+    Hardness = 70
+    Toughness = 220
+    Flexibility = 20
+
+
+Metal.weapons = [[Iron, Copper, Bronze],
+                 [Steel],
+                 [Silver, Gold],
+                 [Mithril, Adamantium]]
+
+Metal.decor = [[Copper, Bronze, Brass],
+               [Silver],
+               [Gold]]
+
+Metal.structure = [[Copper, Bronze, Brass],
+                   [Iron], [Steel]]
+
+
+class Wood(Material):
+    Value = 20
+    Rarity = 10
+    Density = 10
+    Hardness = 30
+    Toughness = 30
+    Flexibility = 200
+
+
+class Textile(Material):
+    pass
+
+
+class Gemstone(Material):
+    pass
