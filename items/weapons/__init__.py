@@ -1,8 +1,6 @@
-import random
 from numpy import add as npadd
 
 from . import damage, structure
-import materials
 from treasure_core import TreasureObject, form_out
 
 

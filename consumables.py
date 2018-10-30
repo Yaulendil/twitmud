@@ -1,5 +1,6 @@
 from treasure_core import TreasureObject
-import materials
+from items import materials
+
 
 class Fluid(TreasureObject):
     attrs = {

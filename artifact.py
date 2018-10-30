@@ -2,8 +2,7 @@ import random
 from numpy import add as npadd
 
 from treasure_core import TreasureObject, form_out
-from consumables import bottleWater, Potion, Bottle
-from materials import METAL, WOOD, GEMSTONE, GLASS, TEXTILE
+from items.materials import METAL, WOOD, TEXTILE
 
 
 class Weapon(TreasureObject):
