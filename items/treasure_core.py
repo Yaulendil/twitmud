@@ -112,7 +112,27 @@ class TreasureObject:
         # self.Appraise()
 
     def get_adj(self):
-        return []
+        adjs = []
+
+        for k, v in self.dmg.items():
+            desc = [""] + self.dmg_FX[k]
+            thresholds = [int((100/len(desc)) * i)  for i in range(len(desc))]
+            adj = ""
+            for i in range(len(desc)):
+                if v > thresholds[i]:
+                    adj = desc[i]
+            adjs.append(adj)
+
+        for k, v in self.aes.items():
+            desc = [""] + self.aes_FX[k]
+            thresholds = [int((100/len(desc)) * i)  for i in range(len(desc))]
+            adj = ""
+            for i in range(len(desc)):
+                if v > thresholds[i]:
+                    adj = desc[i]
+            adjs.append(adj)
+
+        return adjs
 
     def strself(self, *, use_generic=False, adjectives=None, prefix=""):
         if adjectives is None:
