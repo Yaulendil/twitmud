@@ -26,8 +26,10 @@ class Fluid(TreasureObject):
             "red",
             "ruby",
             "orange",
+            "topaz",
             "yellow",
             "golden",
+            "sunshine",
             "green",
             "emerald",
             "blue",
@@ -46,6 +48,7 @@ class Fluid(TreasureObject):
             "coal",
             "white",
             "milky",
+            "grey",
             "silvery",
             "chocolate",
             "woody",
@@ -54,7 +57,7 @@ class Fluid(TreasureObject):
         ],
         "Visual": ["opaque", "cloudy", "clear", "murky"],
         "Texture": ["thick", "thin", "lumpy", "smooth", "chunky", "pulpy"],
-        "Effect": ["strength", "weakness", "health", "poison", "fire", "speed", "slowness", "darkvision", "blindness"],
+        # "Effect": ["strength", "weakness", "health", "poison", "fire", "speed", "slowness", "darkvision", "blindness"],
     }
     TreasureType = "unknown fluid"
     BaseType = "fluid"
@@ -71,7 +74,7 @@ class Fluid(TreasureObject):
     # return o.format(v = " "+self.attrDict["Visual"], c = " "+self.attrDict["Color"])
 
 
-class fluidWater(Fluid):
+class FluidWater(Fluid):
     attrs = {}
     traits = {
         "Color": ["colorless"],
@@ -116,6 +119,6 @@ class Potion(TreasureObject):
     TreasureType = "potion"
 
 
-class bottleWater(Bottle):
-    components = {"Content": fluidWater}
+class BottleWater(Bottle):
+    components = {"Content": FluidWater}
     TreasureType = "water bottle"

@@ -6,6 +6,7 @@ from treasure_core import TreasureObject, form_out
 
 class Weapon(TreasureObject):
     TreasureType = "Generic Weapon"
+    BaseType = "weapon"
 
     def __init__(self, *args, **kwargs):
         self.damage = [0, 0, 0]  # WEAPONS deal damage determined by their components
@@ -33,3 +34,9 @@ class Weapon(TreasureObject):
         )
         o += super().describe(False, pad, full)
         return o
+
+
+class Sword(Weapon):
+    # components = {"Blade": damage.Blade, "Handle": None, "Pommel": None, "Guard": None}
+    components = {"Blade": damage.Blade}
+    TreasureType = "Sword"

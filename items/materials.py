@@ -111,6 +111,9 @@ class Material:
     def __init__(self, amount):
         self.amount = amount
 
+    def __str__(self):
+        return self.__name__.lower()
+
 
 class Metal(Material):
     pass

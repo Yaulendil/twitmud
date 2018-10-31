@@ -22,6 +22,9 @@ def get_a(word, include=False):
 def sequence_words(words, o=""):
     o1 = ""
     # print(f"Sequencing '{words}'")
+    if type(words) != list:
+        return str(words)
+    words = [str(word) for word in words]
     if len(words) == 0:
         pass
     elif len(words) == 1:

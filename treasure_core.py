@@ -1,7 +1,7 @@
 import random
 from numpy import random as npr
 
-from grammar import pluralize, get_a, sequence_words
+import grammar
 
 # Traits NOT to list (normally) in *.describe()
 NoDescribe = ["Material"]
@@ -20,85 +20,44 @@ def get_value(obj, attr):
     return eval(f"obj.{attr}")
 
 
-def random_from(src, q=1, d=None, dd=None):
-    # q = Desired number of elements from src
-    # d = probability distribution
-    st = type(src)
-    ret = src
-    if st == tuple and type(src[1]) == list:
-        # If this is a tuple with a list at index 1
-        d = src[1]
-        src = src[0]
-        st = type(src)
-    elif dd and not d:
-        try:
-            d = [dd[k] for k in src]
-        except:
-            d = None
-    if st == dict:
-        src = list(src.keys())
-        st = type(src)
-    if st == list or st == range:  # SRC is one-dimensional? Pick from it.
-        ret = npr.choice(src, size=q, replace=False, p=d).tolist()
-    return ret
+def normalize(in_):
+    s = sum(in_)
+    return [float(i) / s for i in in_]
 
 
-# def rand_attr(obj, attr):
-#     try:
-#         assert get_value(obj, attr) is None
-#     except:
-#         strt = obj.attrs[attr][0]  # Minimum number of values
-#         stop = obj.attrs[attr][1]  # Maximum number of values
-#         poss = obj.attrs[attr][2]  # Possible values (list or dict)
-#         q = random.randint(strt, stop)
-#         vals = random_from(poss, q)
-#         if strt == 1 and stop == 1:
-#             obj.dictAttr.update({attr: vals[0]})
-#             set_value(obj, attr, vals[0])
-#         else:
-#             obj.dictAttr.update({attr: vals})
-#             set_value(obj, attr, vals)
-#
-#
-# def rand_trait(obj, trait):
-#     try:
-#         assert get_value(obj, trait) is None
-#     except:
-#         poss = obj.traits[trait]  # Possible values (list or dict)
-#         # val = random.sample(poss,1)[0]
-#         val = random_from(poss, None)
-#         obj.dictTrait.update({trait: val})
-#         set_value(obj, trait, val)
-#
-#
-# def randomize(obj, feat=None, r=False):
-#     """Assign all unset attributes, or the given attribute, of an object or component to random possible values.\nIf [r]ecursive, do so for all components as well."""
-#     # if not feat in obj.attrs:
-#     # return
-#     if feat is None:
-#         for feat2 in obj.attrs:
-#             randomize(obj, feat2)
-#         for feat2 in obj.traits:
-#             randomize(obj, feat2)
-#     else:
-#         if feat in obj.attrs:
-#             rand_attr(obj, feat)
-#         if feat in obj.traits:
-#             rand_trait(obj, feat)
-#     if r:
-#         for sub in obj.dictComp:
-#             randomize(obj.dictComp[sub], feat, r)
+def choose_from(choices: list, q=1, probability: list = None):
+    """
+    Choices will be a list. Each item of the list may also be a list or a tuple.
+        If an item of Choices is a tuple, it will be a list of subchoices and a list of probabilities.
+    Probability will be a list of numbers.
+    Choose Q objects from Choices and return them.
+    """
+    if not probability:
+        probability = [1 for _ in choices]
+
+    choice: list = npr.choice(choices, size=q, replace=False, p=normalize(probability)).tolist()
+    for i in range(len(choice)):
+        if type(choice[i]) == tuple:
+            # If a tuple, 0 is list and 1 is prob; Choose
+            choice[i] = choose_from(choice[i][0], 1, choice[i][1])
+        while type(choice[i]) == list and len(choice[i]) > 1 and q == 1:
+            # If a list of >1, choose one; Repeat
+            choice[i] = choose_from(choice[i])
+        while type(choice[i]) == list and len(choice[i]) == 1:
+            # Remove all recursion from final result
+            choice[i] = choice[i][0]
+    return choice
 
 
 def shuffle(obj, feat=None, r=False):
     for attr, (amin, amax, poss) in obj.attrs.items():
         if attr == feat or not feat:
-            q = random.randint(amin, amax)
-            selected = random_from(poss, q)
+            q = npr.randint(amin, amax+1)
+            selected = choose_from(poss, q)
             obj.dictAttr[attr] = selected
     for trait, poss in obj.traits.items():
         if trait == feat or not feat:
-            selected = random_from(poss)[0]
+            selected = choose_from(poss)[0]
             obj.dictTrait[trait] = selected
     if r:
         for comp, obj2 in obj.dictComp.items():
@@ -118,25 +77,20 @@ class TreasureObject:
     components = (
         {}
     )  # COMPONENTS: Sub-objects that make up this object; Should be class name
+    additions = (
+        {}
+    )  # ADDITIONS: Extra sub-objects added on; Gemstones, precious metal inlay, etc
     TreasureType = "Generic Treasure"
     BaseType = "item"
 
     # Damage FX; Adjectives applied when item is damaged
     dmg_FX = {
-        "phys": [
-            "dented",
-            "chipped",
-            "cracked",
-            "broken",
-        ],
+        "phys": ["dented", "chipped", "cracked", "broken"],
         "burn": ["singed", "charred", "melted"],
     }
     # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
     aes_FX = {
-        "cold": [
-            "frosted",
-            "frozen",
-        ],
+        "cold": ["frosted", "frozen"],
         "blood": [
             "blood-speckled",
             "blood-spattered",
@@ -174,12 +128,13 @@ class TreasureObject:
     def strself(self, *, use_generic=False, adjectives=None):
         if adjectives is None:
             adjectives = []
-        generic = get_a(str(self.TreasureType), True)
-        if use_generic:
+        generic = grammar.get_a(str(self.TreasureType), True)
+        if self.TreasureLabel and not use_generic:
+            n = self.TreasureLabel
+        else:
             n = generic
-        n = self.TreasureLabel or generic
-        adj = sequence_words(self.get_adj() + adjectives)
-        return " ".join([adj, n])
+        adj = grammar.sequence_words(self.get_adj() + adjectives)
+        return " ".join([adj, n]).strip()
 
     def __str__(self):
         return self.strself()
@@ -189,21 +144,23 @@ class TreasureObject:
         if solo:
             o += pad + f"'This is {self}.'"
         for a in self.dictAttr:  # Print object attributes (variable number)
-            aa = sequence_words(self.dictAttr[a])
+            aa = grammar.sequence_words(self.dictAttr[a])
             if aa != "":
-                o += form_out(f"Its {a.lower()} is {aa}.", pad)
+                o += form_out(f"Its {a.lower()} is {str(aa)}.", pad)
         for a in self.dictTrait:  # Print object traits (one of each)
             if a not in NoDescribe:
-                o += form_out(f"Its {a.lower()} is {self.dictTrait[a]}.", pad)
-        for a in self.dictComp:  # Describe sub-objects
-            aa = self.dictComp[a]
-            adesc = aa.describe(solo=False, pad=pad + "|", full=full)
+                o += form_out(
+                    f"Its {a.lower()} is {grammar.sequence_words(self.dictTrait[a])}.", pad
+                )
+        for a, aa in self.dictComp.items():  # Describe sub-objects
+            # aa = self.dictComp[a]
+            adesc = aa.describe(solo=False, pad=pad + " ", full=full)
             try:
                 mat = aa.dictTrait["Material"]
                 try:
                     mat = mat.Adjective
                 except:
-                    pass
+                    mat = mat.__name__
                 # if len(aa.dictTrait) <= 1:
                 if adesc.count("\n") < 1 and not full:
                     continue
