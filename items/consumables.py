@@ -1,4 +1,4 @@
-from treasure_core import TreasureObject
+from items.treasure_core import TreasureObject
 from items import materials
 
 

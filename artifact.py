@@ -1,8 +1,8 @@
 import random
 from numpy import add as npadd
 
-from treasure_core import TreasureObject, form_out, choose_from
-from consumables import Bottle, BottleWater
+from items.treasure_core import TreasureObject, form_out, choose_from
+from items.consumables import Bottle, BottleWater
 from items.materials import METAL, WOOD, TEXTILE
 import items.weapons
 

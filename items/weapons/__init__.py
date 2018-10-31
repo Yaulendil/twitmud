@@ -1,7 +1,7 @@
 from numpy import add as npadd
 
 from . import damage, structure
-from treasure_core import TreasureObject, form_out
+from items.treasure_core import TreasureObject, form_out
 
 
 class Weapon(TreasureObject):

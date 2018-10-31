@@ -2,7 +2,7 @@
 Weapon Parts that do not contribute damage. Handles, guards, etc.
 """
 from items import materials
-from treasure_core import TreasureObject, form_out
+from items.treasure_core import TreasureObject, form_out
 
 
 class WPart(TreasureObject):
