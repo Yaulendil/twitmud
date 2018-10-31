@@ -42,6 +42,7 @@ class Weapon(TreasureObject):
 
 
 class Sword(Weapon):
+    """A long blade with a handle on one end; Typically swung to slash"""
     components = {
         "Blade": damage.Blade,
         "Pommel": damage.Sphere,
@@ -52,8 +53,9 @@ class Sword(Weapon):
 
     def strself(self, *a, prefix="", **kw):
         """Insert the blade material in front of "Sword" when describing this"""
-        mat = self.dictComp["Blade"].material
-        kw["prefix"] = " ".join([prefix, mat.__name__])
+        important = self.dictComp["Blade"]
+        kw["prefix"] = " ".join([prefix, important.material.__name__])
+        kw["adjectives"] = important.get_adj()
         return super().strself(*a, **kw)
 
 
@@ -68,6 +70,7 @@ class Greatsword(Sword):
 
 
 class Club(Weapon):
+    """A bludgeon meant to crush bones through hard armor"""
     components = {
         "Head": damage.HeadClub,
         "Handle": structure.HandleLong,
@@ -75,9 +78,9 @@ class Club(Weapon):
     TreasureType = "Club"
 
     def strself(self, *a, prefix="", **kw):
-        """Insert the blade material in front of "Sword" when describing this"""
-        mat = self.dictComp["Head"].material
-        kw["prefix"] = " ".join([prefix, mat.__name__])
+        important = self.dictComp["Head"]
+        kw["prefix"] = " ".join([prefix, important.material.__name__])
+        kw["adjectives"] = important.get_adj()
         return super().strself(*a, **kw)
 
 
@@ -89,6 +92,14 @@ class Mace(Club):
     TreasureType = "Mace"
 
 
+class MaceCav(Club):
+    components = {
+        "Head": damage.HeadMace,
+        "Handle": structure.HandleLonger,
+    }
+    TreasureType = "Cavalry Mace"
+
+
 class Star(Club):
     components = {
         "Head": damage.HeadStar,
@@ -98,4 +109,4 @@ class Star(Club):
 
 
 def random_weapon():
-    return choose_from([Sword, Greatsword, Club, Mace, Star])[0]
+    return choose_from([Sword, Greatsword, Club, Mace, MaceCav, Star])[0]

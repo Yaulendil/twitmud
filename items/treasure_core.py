@@ -1,6 +1,7 @@
 from numpy import random as npr
 
 from grammar import sequence_words, get_a, form_out
+from . import materials
 
 # Traits NOT to list (normally) in *.describe()
 NoDescribe = ["Material"]
@@ -76,11 +77,11 @@ class TreasureObject:
     # Damage FX; Adjectives applied when item is damaged
     dmg_FX = {
         "phys": ["dented", "chipped", "cracked", "broken"],
-        "burn": ["singed", "charred", "melted"],
+        # "burn": ["singed", "charred", "melted"],
     }
     # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
     aes_FX = {
-        "cold": ["frosted", "frozen"],
+        # "cold": ["frosted", "frozen"],
         "blood": [
             "blood-speckled",
             "blood-spattered",
@@ -99,7 +100,7 @@ class TreasureObject:
         self.Value = 0
         self.TreasureLabel = None
 
-        self.HP = 100
+        self.hp = 100
         self.dmg = {x: 0 for x in list(self.dmg_FX)}
         self.aes = {x: 0 for x in list(self.aes_FX)}
 
@@ -108,38 +109,58 @@ class TreasureObject:
             self.dictComp[comp] = c
             c.parent = self
         shuffle(self)
+
+        for k, v in self.dmg.items():
+            self.dmg[k] = npr.randint(0, 100)
+        for k, v in self.aes.items():
+            self.aes[k] = npr.randint(0, 100)
         # self.__str__ = self.strself
         # self.Appraise()
 
-    def get_adj(self):
+    @property
+    def material(self):
+        try:
+            material = self.dictTrait["Material"]
+            while type(material) in [tuple, list, dict]:
+                material = material[0]
+        except:
+            material = materials.Material
+        return material
+
+    def get_adj(self, other=None):
         adjs = []
+        targ = other or self
 
-        for k, v in self.dmg.items():
-            desc = [""] + self.dmg_FX[k]
+        for k, v in targ.material.dmg_FX.items():
+            desc = [""] + targ.material.dmg_FX[k]
             thresholds = [int((100/len(desc)) * i)  for i in range(len(desc))]
             adj = ""
             for i in range(len(desc)):
-                if v > thresholds[i]:
+                if targ.dmg[k] > thresholds[i]:
                     adj = desc[i]
             adjs.append(adj)
 
-        for k, v in self.aes.items():
-            desc = [""] + self.aes_FX[k]
+        for k, v in targ.material.aes_FX.items():
+            desc = [""] + targ.material.aes_FX[k]
             thresholds = [int((100/len(desc)) * i)  for i in range(len(desc))]
             adj = ""
             for i in range(len(desc)):
-                if v > thresholds[i]:
+                if targ.aes[k] > thresholds[i]:
                     adj = desc[i]
             adjs.append(adj)
+
+        while "" in adjs:
+            adjs.remove("")
 
         return adjs
 
     def strself(self, *, use_generic=False, adjectives=None, prefix=""):
-        if adjectives is None:
-            adjectives = []
-        adjectives = [adj.__name__.lower() if type(adj) != str else adj for adj in adjectives]
+        # if adjectives is None:
+        #     adjectives = []
+        adjectives = adjectives or self.get_adj() or []
+        # adjectives = [adj.__name__.lower() if type(adj) != str else adj for adj in adjectives]
         name = self.TreasureType
-        name = " ".join([sequence_words(adjectives), prefix, name])
+        name = " ".join([s.strip() for s in [sequence_words(adjectives), prefix, name] if s])
         generic = get_a(name.strip(), True)
         if self.TreasureLabel and not use_generic:
             n = self.TreasureLabel

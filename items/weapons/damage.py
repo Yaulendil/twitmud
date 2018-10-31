@@ -33,6 +33,12 @@ class Damager(WPart):
 class Blade(Damager):
     """A long flat plane with sharp edges"""
     size = 8
+    type_damage = {  # Coefficients of each damage type done by this component
+        "Crush": {"Density": 1, "Hardness": 0.5, "Flexibility": -0.2},
+        "Pierce": {"Density": 0.3, "Hardness": 1, "Flexibility": 0.5},
+        "Slice": {"Density": 0.2, "Hardness": 1, "Flexibility": 1},
+    }
+
     base_damage = 10
     base_speed = 10
 
@@ -63,8 +69,6 @@ class Sphere(Damager):
     size = 2
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 1.4, "Hardness": 0.2, "Flexibility": 0},
-        "Pierce": {"Density": 0, "Hardness": 0, "Flexibility": 0},
-        "Slice": {"Density": 0, "Hardness": 0, "Flexibility": 0},
     }
     Effectiveness = 2
     DamageTypesGood = [0]
@@ -76,8 +80,6 @@ class HeadClub(Damager):
     size = 6
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.4, "Hardness": 0.1, "Flexibility": 0.2},
-        "Pierce": {"Density": 0, "Hardness": 0, "Flexibility": 0},
-        "Slice": {"Density": 0, "Hardness": 0, "Flexibility": 0},
     }
     Effectiveness = 8
     DamageTypesGood = [0]
@@ -85,26 +87,24 @@ class HeadClub(Damager):
 
 
 class HeadMace(Damager):
-    """A heavy cylinder, with blades attached"""
+    """A heavy cylinder, with flanges or blades attached"""
     size = 6
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
-        "Pierce": {"Density": 0, "Hardness": 0, "Flexibility": 0},
         "Slice": {"Density": 0, "Hardness": 0.3, "Flexibility": 0.1},
     }
     Effectiveness = 6
     DamageTypesGood = [0]
-    TreasureType = "bladed mace head"
+    TreasureType = "flanged head"
 
 
 class HeadStar(Damager):
-    """A heavy ball, with spikes attached"""
+    """A heavy mass, with spikes attached"""
     size = 6
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
         "Pierce": {"Density": 0, "Hardness": 0.3, "Flexibility": 0.1},
-        "Slice": {"Density": 0, "Hardness": 0, "Flexibility": 0},
     }
     Effectiveness = 8
     DamageTypesGood = [0]
-    TreasureType = "spiked star head"
+    TreasureType = "spiked head"

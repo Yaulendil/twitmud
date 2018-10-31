@@ -107,6 +107,22 @@ class Material:
     Hardness = 100
     Toughness = 100
     Flexibility = 100
+    # Damage FX; Adjectives applied when item is damaged
+    dmg_FX = {
+        "phys": ["damaged", "broken", "destroyed"],
+        "burn": ["singed", "charred", "melted"],
+    }
+    # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
+    aes_FX = {
+        "cold": ["frosted", "frozen"],
+        "blood": [
+            "blood-speckled",
+            "blood-spattered",
+            "bloody",
+            "bloodsoaked",
+            "sanguinated",
+        ],
+    }
 
     def __init__(self, amount):
         self.amount = amount
@@ -116,7 +132,22 @@ class Material:
 
 
 class Metal(Material):
-    pass
+    # Damage FX; Adjectives applied when item is damaged
+    dmg_FX = {
+        "phys": ["dented", "chipped", "cracked", "broken"],
+        # "burn": ["singed", "charred", "melted"],
+    }
+    # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
+    aes_FX = {
+        # "cold": ["frosted", "frozen"],
+        "blood": [
+            "blood-speckled",
+            "blood-spattered",
+            "bloody",
+            "bloodsoaked",
+            "sanguinated",
+        ],
+    }
 
 
 class Iron(Metal):
@@ -244,6 +275,22 @@ class Textile(Material):
     Hardness = 30
     Toughness = 30
     Flexibility = 600
+    # Damage FX; Adjectives applied when item is damaged
+    dmg_FX = {
+        "phys": ["worn", "frayed", "torn", "ripped", "shredded"],
+        # "burn": ["singed", "charred", "melted"],
+    }
+    # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
+    aes_FX = {
+        # "cold": ["frosted", "frozen"],
+        "blood": [
+            "blood-speckled",
+            "blood-spattered",
+            "bloody",
+            "bloodsoaked",
+            "sanguinated",
+        ],
+    }
 
 
 class Leather(Textile):

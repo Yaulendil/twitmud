@@ -1,7 +1,7 @@
 """
 Weapon Parts that do not contribute damage. Handles, guards, etc.
 """
-from numpy import round
+from numpy import round, random as npr
 
 from items import materials
 from items.treasure_core import TreasureObject
@@ -22,25 +22,17 @@ class WPart(TreasureObject):
         self.hp = self.base_durability * self.material.Toughness
         # "Health" of a part determines when it breaks and what its damage adjective is
 
-    @property
-    def material(self):
-        try:
-            material = self.dictTrait["Material"]
-            while type(material) in [tuple, list, dict]:
-                material = material[0]
-        except:
-            material = None
-        return material
-
     def damage_rating(self, split=True):
         # Amount of damage contributed by this component
         d = []
         try:  # FC: Assume the part contributes damage
-            for damage_type, coeffs in self.type_damage.items():
+            # for damage_type, coeffs in self.type_damage.items():
+            for damage_type in ["Crush", "Pierce", "Slice"]:
                 damage = 0
                 # for damage_stat, coeff in self.stat_damage.items():
                 # print(self, damage_type + ":")
-                for damage_stat, coeff in coeffs.items():
+                stats = self.type_damage.get(damage_type, {})
+                for damage_stat, coeff in stats.items():
                     dmore = getattr(self.material, damage_stat) * coeff * self.size
                     # print(str(dmore), "from", getattr(self.material, damage_stat), damage_stat, "(" + self.material.__name__ + ")")
                     damage += dmore
