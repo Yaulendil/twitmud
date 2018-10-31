@@ -25,19 +25,20 @@ class Damager(WPart):
     DamageTypesBad = []  # List of damage types that this component is bad for
     # 0: Crush, 1: Pierce, 2: Slice
 
-    traits = {"Material": materials.Metal.weapons}
+    traits = {"Material": (materials.Metal.weapons, [100, 90, 50, 1])}
     base_durability = 5
     TreasureType = "Weapon Component"
 
 
 class Blade(Damager):
+    """A long flat plane with sharp edges"""
     size = 8
     base_damage = 10
     base_speed = 10
 
     Effectiveness = 4
     DamageTypesGood = [2]
-    DamageTypesBad = [0]
+    DamageTypesBad = []
 
     traits = {"Material": materials.Metal.weapons}
     base_durability = 4
@@ -45,11 +46,52 @@ class Blade(Damager):
 
 
 class Sphere(Damager):
-    size = 2
     """A basic and smooth orb"""
+    size = 2
     type_damage = {  # Coefficients of each damage type done by this component
-        "Crush": {"Density": 1, "Hardness": 0.8, "Flexibility": 0},
+        "Crush": {"Density": 1.4, "Hardness": 0.2, "Flexibility": 0},
         "Pierce": {"Density": 0, "Hardness": 0, "Flexibility": 0},
         "Slice": {"Density": 0, "Hardness": 0, "Flexibility": 0},
     }
+    Effectiveness = 2
+    DamageTypesGood = [0]
     TreasureType = "simple orb"
+
+
+class HeadClub(Damager):
+    """A smooth heavy block or cylinder"""
+    size = 6
+    type_damage = {  # Coefficients of each damage type done by this component
+        "Crush": {"Density": 2.4, "Hardness": 0.1, "Flexibility": 0.2},
+        "Pierce": {"Density": 0, "Hardness": 0, "Flexibility": 0},
+        "Slice": {"Density": 0, "Hardness": 0, "Flexibility": 0},
+    }
+    Effectiveness = 8
+    DamageTypesGood = [0]
+    TreasureType = "hammer head"
+
+
+class HeadMace(Damager):
+    """A heavy cylinder, with blades attached"""
+    size = 6
+    type_damage = {  # Coefficients of each damage type done by this component
+        "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
+        "Pierce": {"Density": 0, "Hardness": 0, "Flexibility": 0},
+        "Slice": {"Density": 0, "Hardness": 0.3, "Flexibility": 0.1},
+    }
+    Effectiveness = 6
+    DamageTypesGood = [0]
+    TreasureType = "bladed mace head"
+
+
+class HeadStar(Damager):
+    """A heavy ball, with spikes attached"""
+    size = 6
+    type_damage = {  # Coefficients of each damage type done by this component
+        "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
+        "Pierce": {"Density": 0, "Hardness": 0.3, "Flexibility": 0.1},
+        "Slice": {"Density": 0, "Hardness": 0, "Flexibility": 0},
+    }
+    Effectiveness = 8
+    DamageTypesGood = [0]
+    TreasureType = "spiked flail head"

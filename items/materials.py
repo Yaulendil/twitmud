@@ -132,7 +132,7 @@ class Steel(Metal):
     Value = 100
     Rarity = 100
     Density = 130
-    Hardness = 100
+    Hardness = 200
     Toughness = 200
     Flexibility = 100
 

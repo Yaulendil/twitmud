@@ -1,14 +1,9 @@
 from numpy import random as npr
 
-import grammar
+from grammar import sequence_words, get_a, form_out
 
 # Traits NOT to list (normally) in *.describe()
 NoDescribe = ["Material"]
-
-
-def form_out(txt, pad="", angle=False):
-    ang = {True: "\\", False: "|"}[angle]
-    return f"\n{pad}{ang}_'{txt}'"
 
 
 def normalize(in_):
@@ -23,8 +18,12 @@ def choose_from(choices: list, q=1, probability: list = None):
     Probability will be a list of numbers.
     Choose Q objects from Choices and return them.
     """
+    prob = None
+    if type(choices) == tuple:
+        choices, prob = choices
+
     if not probability:
-        probability = [1 for _ in choices]
+        probability = prob or [1 for _ in choices]
 
     choice: list = npr.choice(
         choices, size=q, replace=False, p=normalize(probability)
@@ -105,9 +104,8 @@ class TreasureObject:
 
         for comp in self.components:
             c = self.components[comp]()
-            self.dictComp.update({comp: c})
+            self.dictComp[comp] = c
             c.parent = self
-            # SetValue(self,comp,c)
         shuffle(self)
         # self.__str__ = self.strself
         # self.Appraise()
@@ -115,16 +113,20 @@ class TreasureObject:
     def get_adj(self):
         return []
 
-    def strself(self, *, use_generic=False, adjectives=None):
+    def strself(self, *, use_generic=False, adjectives=None, prefix=""):
         if adjectives is None:
             adjectives = []
-        generic = grammar.get_a(str(self.TreasureType), True)
+        adjectives = [adj.__name__.lower() if type(adj) != str else adj for adj in adjectives]
+        name = self.TreasureType
+        name = " ".join([sequence_words(adjectives), prefix, name])
+        generic = get_a(name.strip(), True)
         if self.TreasureLabel and not use_generic:
             n = self.TreasureLabel
         else:
             n = generic
-        adj = grammar.sequence_words(self.get_adj() + adjectives)
-        return " ".join([adj, n]).strip()
+        # adj = sequence_words(self.get_adj() + adjectives)
+        # return " ".join([adj, n]).strip()
+        return n.strip()
 
     def __str__(self):
         return self.strself()
@@ -134,20 +136,20 @@ class TreasureObject:
         if solo:
             o += pad + f"'This is {self}.'"
         for a in self.dictAttr:  # Print object attributes (variable number)
-            aa = grammar.sequence_words(self.dictAttr[a])
+            aa = sequence_words(self.dictAttr[a])
             if aa != "":
                 o += form_out(f"Its {a.lower()} is {str(aa)}.", pad)
         for a in self.dictTrait:  # Print object traits (one of each)
             if a not in NoDescribe:
                 o += form_out(
-                    f"Its {a.lower()} is {grammar.sequence_words(self.dictTrait[a])}.",
+                    f"Its {a.lower()} is {sequence_words(self.dictTrait[a])}.",
                     pad,
                 )
-        for a, aa in self.dictComp.items():  # Describe sub-objects
+        for a, obj in self.dictComp.items():  # Describe sub-objects
             # aa = self.dictComp[a]
-            adesc = aa.describe(solo=False, pad=pad + "|", full=full)
+            adesc = obj.describe(solo=False, pad=pad + "|", full=full)
             try:
-                mat = aa.dictTrait["Material"]
+                mat = obj.dictTrait["Material"]
                 try:
                     mat = mat.Adjective
                 except:

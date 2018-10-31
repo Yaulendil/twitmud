@@ -38,3 +38,8 @@ def sequence_words(words, o=""):
         for p in words:
             o = o + ", {}".format(p)
     return o + o1
+
+
+def form_out(txt, pad="", angle=False):
+    ang = {True: "\\", False: "|"}[angle]
+    return f"\n{pad}{ang}_'{txt}'"

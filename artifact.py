@@ -1,10 +1,9 @@
 import random
 from numpy import add as npadd
 
-from items.treasure_core import TreasureObject, form_out, choose_from
-from items.consumables import Bottle, BottleWater
-from items.materials import METAL, WOOD, TEXTILE
-import items.weapons
+from items.treasure_core import TreasureObject
+from grammar import form_out
+import items
 
 
 class Weapon(TreasureObject):
@@ -44,7 +43,7 @@ def db(*args):
 
 
 class WPart(TreasureObject):
-    traits = {"Material": METAL}
+    # traits = {"Material": METAL}
     TreasureType = "Weapon Component"
     baseDurability = 5
 
@@ -182,13 +181,13 @@ class wp_Crush(WPart):
 
 
 class wp_Wrap(WPart):
-    traits = {"Material": TEXTILE}
+    # traits = {"Material": TEXTILE}
     TreasureType = "simple wrapping"
     baseDurability = 5
 
 
 class wp_Handle(WPart):
-    traits = {"Material": {**METAL, **WOOD}}
+    # traits = {"Material": {**METAL, **WOOD}}
     components = {"Grip": wp_Wrap}
     TreasureType = "handle"
     baseDurability = 3
