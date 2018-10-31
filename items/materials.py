@@ -323,11 +323,11 @@ class Gemstone(Material):
 
 
 Metal.weapons = [[Iron, Copper, Bronze], [Steel], [Silver, Gold], [Mithril, Adamantium]]
-
 Metal.decor = [[Copper, Bronze, Brass], [Silver], [Gold]]
-
 Metal.structure = [[Copper, Bronze, Brass], [Iron], [Steel]]
 
 Wood.structure = [Oak, Spruce, Maple]
 
 Textile.all = [Leather, Silk, Cotton, Canvas, Wool]
+Textile.common = [Leather, Canvas]
+Textile.fine = [Silk, Wool]

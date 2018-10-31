@@ -7,6 +7,7 @@ from items.treasure_core import TreasureObject, form_out, choose_from
 class Weapon(TreasureObject):
     TreasureType = "Generic Weapon"
     BaseType = "weapon"
+    damager = None
 
     def __init__(self, *args, **kwargs):
         # WEAPONS deal damage determined by their components
@@ -21,6 +22,11 @@ class Weapon(TreasureObject):
             r = 0
         return r
 
+    def speed(self, base=None):
+        base = base or self.dictComp[self.damager].base_speed or 10
+        speed = 1000 * base / self.weight()
+        return round(speed,2)
+
     def calc_size(self):
         s = 1
         return s
@@ -30,6 +36,16 @@ class Weapon(TreasureObject):
         for comp in self.dictComp:
             d = npadd(d, self.dictComp[comp].damage_rating(True))
         return list(d)
+
+    def strself(self, *a, prefix="", **kw):
+        """Take the adjectives from the "core" component"""
+        try:
+            important = self.dictComp[self.damager]
+            kw["prefix"] = " ".join([prefix, important.material.__name__])
+            kw["adjectives"] = important.get_adj()
+        except:
+            pass
+        return super().strself(*a, **kw)
 
     def describe(self, solo=True, pad="", full=False):
         o = ""
@@ -45,6 +61,8 @@ class Weapon(TreasureObject):
             + " ideal-total.",
             pad,
         )
+        o += form_out(f"It has a weight of {str(self.weight())} "
+                      + f"for a speed of {str(self.speed())}.", pad)
         o += super().describe(False, pad, full)
         return o
 
@@ -58,13 +76,7 @@ class Sword(Weapon):
         "Guard": [structure.Crossguard, structure.Roundguard],
     }
     TreasureType = "Sword"
-
-    def strself(self, *a, prefix="", **kw):
-        """Insert the blade material in front of "Sword" when describing this"""
-        important = self.dictComp["Blade"]
-        kw["prefix"] = " ".join([prefix, important.material.__name__])
-        kw["adjectives"] = important.get_adj()
-        return super().strself(*a, **kw)
+    damager = "Blade"
 
 
 class Greatsword(Sword):
@@ -89,25 +101,21 @@ class Dagger(Sword):
 
 class Club(Weapon):
     """A bludgeon meant to crush bones through hard armor"""
+
     components = {
         "Head": damage.HeadClub,
         "Handle": structure.HandleLong,
-        "Counterweight": [None, damage.Sphere],
+        # "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Club"
-
-    def strself(self, *a, prefix="", **kw):
-        important = self.dictComp["Head"]
-        kw["prefix"] = " ".join([prefix, important.material.__name__])
-        kw["adjectives"] = important.get_adj()
-        return super().strself(*a, **kw)
+    damager = "Head"
 
 
 class Mace(Club):
     components = {
         "Head": damage.HeadMace,
         "Handle": structure.HandleLong,
-        "Counterweight": damage.Sphere,
+        # "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Mace"
 
@@ -116,7 +124,7 @@ class MaceCav(Club):
     components = {
         "Head": damage.HeadMace,
         "Handle": structure.HandleLonger,
-        "Counterweight": damage.Sphere,
+        # "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Cavalry Mace"
 
@@ -125,14 +133,35 @@ class Star(Club):
     components = {
         "Head": damage.HeadStar,
         "Handle": structure.HandleLong,
-        "Counterweight": damage.Sphere,
+        # "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Star"
 
-swords = [Sword, Greatsword, Dagger]
-bludgeons = [Club, Mace, MaceCav, Star]
 
-weapons = [swords, bludgeons]
+class Axe(Weapon):
+    components = {
+        "Head": damage.HeadAxe,
+        "Handle": structure.HandleLong,
+        # "Counterweight": [None, damage.Sphere],
+    }
+    TreasureType = "Axe"
+    damager = "Head"
+
+
+swords = [Sword, Greatsword, Dagger]
+bludgeons = [Club, Mace, Star]
+cleavers = [Axe]
+polearms = [MaceCav]
+
+weapons = [swords, bludgeons, cleavers, polearms]
+
 
 def random_weapon():
     return choose_from(weapons)[0]
+
+
+def test_weapons():
+    for a in weapons:
+        for b in a:
+            print(b().describe(full=True))
+            print("")

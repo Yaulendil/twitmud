@@ -35,13 +35,13 @@ class WPart(TreasureObject):
 
 class Grip(WPart):
     size = 0.5
-    traits = {"Material": materials.Textile.all}
+    traits = {"Material": materials.Textile.common}
     TreasureType = "simple wrapping"
 
 
 class GripWide(WPart):
     size = 1.5
-    traits = {"Material": materials.Textile.all}
+    traits = {"Material": materials.Textile.common}
     TreasureType = "long wrapping"
 
 
@@ -62,8 +62,10 @@ class HandleLong(WPart):
 class HandleLonger(WPart):
     size = 14
     traits = {"Material": materials.Metal.structure + materials.Wood.structure}
-    components = {"Upper Grip": [None, Grip, GripWide],
-                  "Lower Grip": [None, Grip, GripWide]}
+    components = {
+        "Upper Grip": [None, Grip, GripWide],
+        "Lower Grip": [None, Grip, GripWide],
+    }
     TreasureType = "pole"
 
 

@@ -7,6 +7,7 @@ from . import materials
 NoDescribe = ["Material"]
 DEBUG = False
 
+
 def normalize(in_):
     s = sum(in_)
     return [float(i) / s for i in in_]
@@ -21,7 +22,7 @@ def choose_from(choices: list, q=1, probability: list = None):
     """
     prob = None
     if type(choices) == tuple:
-        choices, prob = choices
+        (choices, prob) = choices
 
     if not probability:
         probability = prob or [1 for _ in choices]
@@ -106,7 +107,7 @@ class TreasureObject:
 
         self.hp = 100
         self.dmg = {x: npr.randint(0, 30) for x in list(self.dmg_FX)}
-        self.aes = {x: 0 for x in list(self.aes_FX)}
+        self.aes = {x: npr.randint(0, 30) for x in list(self.aes_FX)}
 
         for comp, v in self.components.items():
             if type(v) == list:
@@ -136,6 +137,16 @@ class TreasureObject:
         except:
             material = materials.Material
         return material
+
+    def weight(self):
+        w = 0
+        try:
+            w += self.size * self.material.Density
+        except:
+            pass
+        for k, v in self.dictComp.items():
+            w += v.weight()
+        return w
 
     def get_adj(self, other=None):
         adjs = []
@@ -211,7 +222,7 @@ class TreasureObject:
                 if adesc.count("\n") < 1 and not full:
                     continue
                 o += form_out(
-                    f"Its {a.lower()} is {self.dictComp[a]} of {mat}.", pad, True
+                    f"Its {a.lower()} is {self.dictComp[a]} of {mat.lower()}.", pad, True
                 )
             except:
                 o += form_out(f"Its {a.lower()} is {self.dictComp[a]}.", pad, True)

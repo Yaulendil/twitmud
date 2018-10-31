@@ -24,7 +24,8 @@ class Damager(WPart):
     DamageTypesBad = []  # List of damage types that this component is bad for
     # 0: Crush, 1: Pierce, 2: Slice
 
-    traits = {"Material": (materials.Metal.weapons, [100, 90, 50, 1])}
+    # traits = {"Material": (materials.Metal.weapons, [100, 90, 50, 1])}
+    traits = {"Material": [materials.Steel]}
     base_durability = 5
     TreasureType = "Weapon Component"
 
@@ -96,7 +97,7 @@ class BladeSmall(Blade):
 
     size = 5
     base_damage = 8
-    base_speed = 14
+    base_speed = 11
 
     Effectiveness = 2
     DamageTypesGood = [1, 2]
@@ -108,7 +109,7 @@ class BladeSmall(Blade):
 class HeadClub(Damager):
     """A smooth heavy block or cylinder"""
 
-    size = 6
+    size = 5
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.4, "Hardness": 0.1, "Flexibility": 0.2}
     }
@@ -131,22 +132,36 @@ class Sphere(HeadClub):
 class HeadMace(HeadClub):
     """A heavy cylinder, with flanges or blades attached"""
 
-    size = 6
+    size = 5
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
-        "Slice": {"Density": 0, "Hardness": 0.3, "Flexibility": 0.1},
+        "Slice": {"Density": 0.4, "Hardness": 0.3, "Flexibility": 0.1},
     }
-    Effectiveness = 6
+    Effectiveness = 9
     TreasureType = "flanged head"
 
 
 class HeadStar(HeadClub):
     """A heavy mass, with spikes attached"""
 
-    size = 6
+    size = 5
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
-        "Pierce": {"Density": 0, "Hardness": 0.3, "Flexibility": 0.1},
+        "Pierce": {"Density": 1, "Hardness": 0.3, "Flexibility": 0.1},
     }
-    Effectiveness = 8
+    Effectiveness = 9
     TreasureType = "spiked head"
+
+
+class HeadAxe(Damager):
+    """A heavy blade that uses momentum to cleave"""
+
+    size = 7
+    type_damage = {  # Coefficients of each damage type done by this component
+        "Crush": {"Density": 0.8, "Hardness": 0.1, "Flexibility": -0.2},
+        # "Pierce": {"Density": 0, "Hardness": 0, "Flexibility": 0},
+        "Slice": {"Density": 1, "Hardness": 1.2, "Flexibility": 0.6},
+    }
+    Effectiveness = 4
+    DamageTypesGood = [0, 2]
+    TreasureType = "crescent blade"

@@ -86,9 +86,11 @@ class FluidWater(Fluid):
 
 
 class Bottle(TreasureObject):
+    prefix = {
+        "Material": materials.Metal.decor,
+    }
     components = {"Content": Fluid}
     traits = {
-        "Material": materials.Metal.decor,
         "Fullness": range(20, 100, 5),
         # "Vessel":["bottle","flask","vial"],
         "Shape": [
@@ -114,8 +116,16 @@ class Bottle(TreasureObject):
     # return o
 
 
+class Flask(Bottle):
+    TreasureType = "flask"
+
+
+class Vial(Bottle):
+    TreasureType = "vial"
+
+
 class Potion(TreasureObject):
-    components = {"Bottle": Bottle}
+    components = {"Bottle": [Bottle, Flask, Vial]}
     TreasureType = "potion"
 
 
