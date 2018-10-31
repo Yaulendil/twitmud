@@ -5,7 +5,7 @@ from . import materials
 
 # Traits NOT to list (normally) in *.describe()
 NoDescribe = ["Material"]
-
+DEBUG = False
 
 def normalize(in_):
     s = sum(in_)
@@ -25,6 +25,9 @@ def choose_from(choices: list, q=1, probability: list = None):
 
     if not probability:
         probability = prob or [1 for _ in choices]
+
+    if DEBUG:
+        print("\nChoices =", [type(x) for x in choices], "\nProbab. =", probability)
 
     choice: list = npr.choice(
         choices, size=q, replace=False, p=normalize(probability)
@@ -102,19 +105,25 @@ class TreasureObject:
         self.TreasureLabel = None
 
         self.hp = 100
-        self.dmg = {x: 0 for x in list(self.dmg_FX)}
+        self.dmg = {x: npr.randint(0, 30) for x in list(self.dmg_FX)}
         self.aes = {x: 0 for x in list(self.aes_FX)}
 
-        for comp in self.components:
-            c = self.components[comp]()
+        for comp, v in self.components.items():
+            if type(v) == list:
+                choice = choose_from(v)[0]
+                if not choice:
+                    continue
+            else:
+                choice = v
+            c = choice()
             self.dictComp[comp] = c
             c.parent = self
         shuffle(self)
 
-        for k in self.dmg:
-            self.dmg[k] = npr.randint(0, 30)
-        for k in self.aes:
-            self.aes[k] = npr.randint(0, 50)
+        # for k in self.dmg:
+        #     self.dmg[k] = npr.randint(0, 30)
+        # for k in self.aes:
+        #     self.aes[k] = npr.randint(0, 50)
         # self.__str__ = self.strself
         # self.Appraise()
 

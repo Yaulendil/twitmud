@@ -13,6 +13,14 @@ class Weapon(TreasureObject):
         super().__init__(self, *args, **kwargs)
         self.damage = self.calc_damage()
 
+    @property
+    def reach(self):
+        try:
+            r = self.dictComp["Handle"].size
+        except:
+            r = 0
+        return r
+
     def calc_size(self):
         s = 1
         return s
@@ -47,7 +55,7 @@ class Sword(Weapon):
         "Blade": damage.Blade,
         "Pommel": damage.Sphere,
         "Handle": structure.Handle,
-        "Guard": structure.Crossguard,
+        "Guard": [structure.Crossguard, structure.Roundguard],
     }
     TreasureType = "Sword"
 
@@ -69,11 +77,22 @@ class Greatsword(Sword):
     TreasureType = "Greatsword"
 
 
+class Dagger(Sword):
+    components = {
+        "Blade": damage.BladeSmall,
+        "Pommel": damage.Sphere,
+        "Handle": structure.Handle,
+        "Guard": structure.Roundguard,
+    }
+    TreasureType = "Dagger"
+
+
 class Club(Weapon):
     """A bludgeon meant to crush bones through hard armor"""
     components = {
         "Head": damage.HeadClub,
         "Handle": structure.HandleLong,
+        "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Club"
 
@@ -88,6 +107,7 @@ class Mace(Club):
     components = {
         "Head": damage.HeadMace,
         "Handle": structure.HandleLong,
+        "Counterweight": damage.Sphere,
     }
     TreasureType = "Mace"
 
@@ -96,6 +116,7 @@ class MaceCav(Club):
     components = {
         "Head": damage.HeadMace,
         "Handle": structure.HandleLonger,
+        "Counterweight": damage.Sphere,
     }
     TreasureType = "Cavalry Mace"
 
@@ -104,9 +125,14 @@ class Star(Club):
     components = {
         "Head": damage.HeadStar,
         "Handle": structure.HandleLong,
+        "Counterweight": damage.Sphere,
     }
     TreasureType = "Star"
 
+swords = [Sword, Greatsword, Dagger]
+bludgeons = [Club, Mace, MaceCav, Star]
+
+weapons = [swords, bludgeons]
 
 def random_weapon():
-    return choose_from([Sword, Greatsword, Club, Mace, MaceCav, Star])[0]
+    return choose_from(weapons)[0]

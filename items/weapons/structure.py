@@ -1,8 +1,6 @@
 """
 Weapon Parts that do not contribute damage. Handles, guards, etc.
 """
-from numpy import round, random as npr
-
 from items import materials
 from items.treasure_core import TreasureObject
 from grammar import form_out
@@ -24,32 +22,7 @@ class WPart(TreasureObject):
 
     def damage_rating(self, split=True):
         # Amount of damage contributed by this component
-        d = []
-        try:  # FC: Assume the part contributes damage
-            # for damage_type, coeffs in self.type_damage.items():
-            for damage_type in ["Crush", "Pierce", "Slice"]:
-                damage = 0
-                # for damage_stat, coeff in self.stat_damage.items():
-                # print(self, damage_type + ":")
-                stats = self.type_damage.get(damage_type, {})
-                for damage_stat, coeff in stats.items():
-                    dmore = getattr(self.material, damage_stat) * coeff * self.size
-                    # print(str(dmore), "from", getattr(self.material, damage_stat), damage_stat, "(" + self.material.__name__ + ")")
-                    damage += dmore
-                d.append(damage/100)
-
-            for i in range(len(d)):
-                if i in self.DamageTypesGood:
-                    d[i] *= self.Effectiveness
-                if i in self.DamageTypesBad:
-                    d[i] /= self.Effectiveness
-                # d[i] = d[i]/100
-        except AttributeError:  # FC: It has been found that this part contributes no damage
-            d = [0, 0, 0]
-        d_out = [round(i, 2) for i in d]
-        if not split:
-            d_out = sum(d_out)
-        return d_out
+        return [0, 0, 0] if split else 0
 
     def describe(self, solo=True, pad="", full=False):
         o = super().describe(solo, pad, full)
@@ -75,22 +48,22 @@ class GripWide(WPart):
 class Handle(WPart):
     size = 3
     traits = {"Material": materials.Metal.structure + materials.Wood.structure}
-    components = {"Grip": Grip}
+    components = {"Grip": [None, Grip]}
     TreasureType = "straight handle"
 
 
 class HandleLong(WPart):
     size = 8
     traits = {"Material": materials.Metal.structure + materials.Wood.structure}
-    components = {"Grip": GripWide}
+    components = {"Grip": [None, GripWide]}
     TreasureType = "long handle"
 
 
 class HandleLonger(WPart):
     size = 14
     traits = {"Material": materials.Metal.structure + materials.Wood.structure}
-    components = {"Upper Grip": GripWide,
-                  "Lower Grip": Grip}
+    components = {"Upper Grip": [None, Grip, GripWide],
+                  "Lower Grip": [None, Grip, GripWide]}
     TreasureType = "pole"
 
 
@@ -102,3 +75,8 @@ class Crossguard(WPart):
 class Roundguard(WPart):
     size = 2
     TreasureType = "round guard"
+
+
+class Basket(WPart):
+    size = 3
+    TreasureType = "basket guard"

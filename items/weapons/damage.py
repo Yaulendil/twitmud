@@ -1,6 +1,8 @@
 """
 Weapon Parts that contribute damage to the weapon. Blades, heads, points, spikes...Anything that can be used to kill.
 """
+from numpy import round
+
 from items import materials
 
 # from treasure_core import TreasureObject, form_out
@@ -26,6 +28,34 @@ class Damager(WPart):
     base_durability = 5
     TreasureType = "Weapon Component"
 
+    def damage_rating(self, split=True):
+        # Amount of damage contributed by this component
+        d = []
+        try:  # FC: Assume the part contributes damage
+            # for damage_type, coeffs in self.type_damage.items():
+            for damage_type in ["Crush", "Pierce", "Slice"]:
+                damage = 0
+                # for damage_stat, coeff in self.stat_damage.items():
+                # print(self, damage_type + ":")
+                stats = self.type_damage.get(damage_type, {})
+                for damage_stat, coeff in stats.items():
+                    dmore = getattr(self.material, damage_stat) * coeff * self.size
+                    # print(str(dmore), "from", getattr(self.material, damage_stat), damage_stat, "(" + self.material.__name__ + ")")
+                    damage += dmore
+                d.append(damage/100)
+
+            for i in range(len(d)):
+                if i in self.DamageTypesGood:
+                    d[i] *= self.Effectiveness
+                if i in self.DamageTypesBad:
+                    d[i] /= self.Effectiveness
+        except AttributeError:  # FC: It has been found that this part contributes no damage
+            d = [0, 0, 0]
+        d_out = [round(i, 2) for i in d]
+        if not split:
+            d_out = sum(d_out)
+        return d_out
+
 
 class Blade(Damager):
     """A long flat plane with sharp edges"""
@@ -42,14 +72,13 @@ class Blade(Damager):
 
     Effectiveness = 4
     DamageTypesGood = [2]
-    DamageTypesBad = []
 
     base_durability = 4
     TreasureType = "typical blade"
 
 
-class BladeBig(Damager):
-    """A long flat plane with sharp edges"""
+class BladeBig(Blade):
+    """A very long flat plane with sharp edges"""
 
     size = 14
     base_damage = 12
@@ -59,20 +88,21 @@ class BladeBig(Damager):
     DamageTypesGood = [2]
     DamageTypesBad = [1]
 
-    base_durability = 4
     TreasureType = "great blade"
 
 
-class Sphere(Damager):
-    """A basic and smooth orb"""
+class BladeSmall(Blade):
+    """A short flat plane with sharp edges"""
 
-    size = 2
-    type_damage = {  # Coefficients of each damage type done by this component
-        "Crush": {"Density": 1.4, "Hardness": 0.2, "Flexibility": 0}
-    }
+    size = 5
+    base_damage = 8
+    base_speed = 14
+
     Effectiveness = 2
-    DamageTypesGood = [0]
-    TreasureType = "simple orb"
+    DamageTypesGood = [1, 2]
+    DamageTypesBad = [0]
+
+    TreasureType = "small blade"
 
 
 class HeadClub(Damager):
@@ -87,7 +117,18 @@ class HeadClub(Damager):
     TreasureType = "club head"
 
 
-class HeadMace(Damager):
+class Sphere(HeadClub):
+    """A basic and smooth orb"""
+
+    size = 2
+    type_damage = {  # Coefficients of each damage type done by this component
+        "Crush": {"Density": 1.4, "Hardness": 0.2, "Flexibility": 0}
+    }
+    Effectiveness = 2
+    TreasureType = "simple orb"
+
+
+class HeadMace(HeadClub):
     """A heavy cylinder, with flanges or blades attached"""
 
     size = 6
@@ -96,11 +137,10 @@ class HeadMace(Damager):
         "Slice": {"Density": 0, "Hardness": 0.3, "Flexibility": 0.1},
     }
     Effectiveness = 6
-    DamageTypesGood = [0]
     TreasureType = "flanged head"
 
 
-class HeadStar(Damager):
+class HeadStar(HeadClub):
     """A heavy mass, with spikes attached"""
 
     size = 6
@@ -109,5 +149,4 @@ class HeadStar(Damager):
         "Pierce": {"Density": 0, "Hardness": 0.3, "Flexibility": 0.1},
     }
     Effectiveness = 8
-    DamageTypesGood = [0]
     TreasureType = "spiked head"
