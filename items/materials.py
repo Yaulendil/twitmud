@@ -200,19 +200,6 @@ class Adamantium(Metal):
     Flexibility = 20
 
 
-Metal.weapons = [[Iron, Copper, Bronze],
-                 [Steel],
-                 [Silver, Gold],
-                 [Mithril, Adamantium]]
-
-Metal.decor = [[Copper, Bronze, Brass],
-               [Silver],
-               [Gold]]
-
-Metal.structure = [[Copper, Bronze, Brass],
-                   [Iron], [Steel]]
-
-
 class Wood(Material):
     Value = 20
     Rarity = 10
@@ -222,9 +209,78 @@ class Wood(Material):
     Flexibility = 200
 
 
+class Oak(Wood):
+    pass
+
+
+class Elm(Wood):
+    pass
+
+
+class Maple(Wood):
+    pass
+
+
+class Redwood(Wood):
+    pass
+
+
+class Willow(Wood):
+    pass
+
+
+class Mahogany(Wood):
+    pass
+
+
+class Spruce(Wood):
+    pass
+
+
 class Textile(Material):
+    Value = 40
+    Rarity = 10
+    Density = 10
+    Hardness = 30
+    Toughness = 30
+    Flexibility = 600
+
+
+class Leather(Textile):
+    pass
+
+
+class Silk(Textile):
+    pass
+
+
+class Cotton(Textile):
+    pass
+
+
+class Canvas(Textile):
+    pass
+
+
+class Wool(Textile):
     pass
 
 
 class Gemstone(Material):
-    pass
+    Value = 200
+    Rarity = 1000
+    Density = 10
+    Hardness = 300
+    Toughness = 10
+    Flexibility = 20
+
+
+Metal.weapons = [[Iron, Copper, Bronze], [Steel], [Silver, Gold], [Mithril, Adamantium]]
+
+Metal.decor = [[Copper, Bronze, Brass], [Silver], [Gold]]
+
+Metal.structure = [[Copper, Bronze, Brass], [Iron], [Steel]]
+
+Wood.structure = [Oak, Spruce, Maple]
+
+Textile.all = [Leather, Silk, Cotton, Canvas, Wool]

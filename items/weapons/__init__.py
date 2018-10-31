@@ -1,4 +1,4 @@
-from numpy import add as npadd
+from numpy import add as npadd, round
 
 from . import damage, structure
 from items.treasure_core import TreasureObject, form_out
@@ -9,9 +9,9 @@ class Weapon(TreasureObject):
     BaseType = "weapon"
 
     def __init__(self, *args, **kwargs):
-        self.damage = [0, 0, 0]  # WEAPONS deal damage determined by their components
+        # WEAPONS deal damage determined by their components
         super().__init__(self, *args, **kwargs)
-        self.calc_damage()
+        self.damage = self.calc_damage()
 
     def calc_size(self):
         s = 1
@@ -29,7 +29,7 @@ class Weapon(TreasureObject):
             o += pad + f"'This is {self}.'"
         d = self.calc_damage()
         o += form_out(
-            f"It does {'/'.join([str(i) for i in d])} C/P/S damage for {sum(d)} ideal-total.",
+            f"It does {'/'.join([str(round(i, 2)) for i in d])} C/P/S damage for {round(sum(d), 2)} ideal-total.",
             pad,
         )
         o += super().describe(False, pad, full)
@@ -37,6 +37,5 @@ class Weapon(TreasureObject):
 
 
 class Sword(Weapon):
-    # components = {"Blade": damage.Blade, "Handle": None, "Pommel": None, "Guard": None}
-    components = {"Blade": damage.Blade}
+    components = {"Blade": damage.Blade, "Pommel": damage.Sphere, "Handle": structure.Handle, "Guard": structure.Crossguard}
     TreasureType = "Sword"

@@ -1,4 +1,3 @@
-import random
 from numpy import random as npr
 
 import grammar
@@ -10,14 +9,6 @@ NoDescribe = ["Material"]
 def form_out(txt, pad="", angle=False):
     ang = {True: "\\", False: "|"}[angle]
     return f"\n{pad}{ang}_'{txt}'"
-
-
-def set_value(obj, attr, value):
-    exec(f"obj.{attr} = value")
-
-
-def get_value(obj, attr):
-    return eval(f"obj.{attr}")
 
 
 def normalize(in_):
@@ -35,7 +26,9 @@ def choose_from(choices: list, q=1, probability: list = None):
     if not probability:
         probability = [1 for _ in choices]
 
-    choice: list = npr.choice(choices, size=q, replace=False, p=normalize(probability)).tolist()
+    choice: list = npr.choice(
+        choices, size=q, replace=False, p=normalize(probability)
+    ).tolist()
     for i in range(len(choice)):
         if type(choice[i]) == tuple:
             # If a tuple, 0 is list and 1 is prob; Choose
@@ -52,7 +45,7 @@ def choose_from(choices: list, q=1, probability: list = None):
 def shuffle(obj, feat=None, r=False):
     for attr, (amin, amax, poss) in obj.attrs.items():
         if attr == feat or not feat:
-            q = npr.randint(amin, amax+1)
+            q = npr.randint(amin, amax + 1)
             selected = choose_from(poss, q)
             obj.dictAttr[attr] = selected
     for trait, poss in obj.traits.items():
@@ -65,21 +58,18 @@ def shuffle(obj, feat=None, r=False):
 
 
 class TreasureObject:
-    attrs = (
-        {}
-    )  # ATTRIBUTES: Flavor modifiers, no effect; Any number of a certain attribute type
+    attrs = {}
+    # ATTRIBUTES: Flavor modifiers, no effect; Any number of a certain attribute type
     # A value in attrs MUST be: a TUPLE or LIST containing: INT1, INT2, LIST1
     # A value in the ATTRDICT of an instance of this class will then be:
     #     - a LIST containing between INT1 and INT2, inclusive, elements from LIST1
-    traits = (
-        {}
-    )  # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given trait
-    components = (
-        {}
-    )  # COMPONENTS: Sub-objects that make up this object; Should be class name
-    additions = (
-        {}
-    )  # ADDITIONS: Extra sub-objects added on; Gemstones, precious metal inlay, etc
+    traits = {}
+    # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given trait
+    components = {}
+    # COMPONENTS: Sub-objects that make up this object; Should be class name
+    additions = {}
+    # ADDITIONS: Extra sub-objects added on; Gemstones, precious metal inlay, etc
+
     TreasureType = "Generic Treasure"
     BaseType = "item"
 
@@ -150,11 +140,12 @@ class TreasureObject:
         for a in self.dictTrait:  # Print object traits (one of each)
             if a not in NoDescribe:
                 o += form_out(
-                    f"Its {a.lower()} is {grammar.sequence_words(self.dictTrait[a])}.", pad
+                    f"Its {a.lower()} is {grammar.sequence_words(self.dictTrait[a])}.",
+                    pad,
                 )
         for a, aa in self.dictComp.items():  # Describe sub-objects
             # aa = self.dictComp[a]
-            adesc = aa.describe(solo=False, pad=pad + " ", full=full)
+            adesc = aa.describe(solo=False, pad=pad + "|", full=full)
             try:
                 mat = aa.dictTrait["Material"]
                 try:
