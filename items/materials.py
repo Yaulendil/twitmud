@@ -160,8 +160,8 @@ class Iron(Metal):
 
 
 class Steel(Metal):
-    Value = 100
-    Rarity = 100
+    Value = 150
+    Rarity = 140
     Density = 130
     Hardness = 200
     Toughness = 200
@@ -169,26 +169,26 @@ class Steel(Metal):
 
 
 class Brass(Metal):
-    Value = 100
-    Rarity = 100
-    Density = 100
-    Hardness = 100
-    Toughness = 100
-    Flexibility = 100
+    Value = 180
+    Rarity = 120
+    Density = 120
+    Hardness = 60
+    Toughness = 130
+    Flexibility = 50
 
 
 class Bronze(Metal):
-    Value = 100
-    Rarity = 100
-    Density = 100
+    Value = 80
+    Rarity = 120
+    Density = 115
     Hardness = 100
     Toughness = 90
     Flexibility = 100
 
 
 class Copper(Metal):
-    Value = 100
-    Rarity = 100
+    Value = 70
+    Rarity = 80
     Density = 110
     Hardness = 100
     Toughness = 75

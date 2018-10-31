@@ -77,11 +77,11 @@ class TreasureObject:
     # Damage FX; Adjectives applied when item is damaged
     dmg_FX = {
         "phys": ["dented", "chipped", "cracked", "broken"],
-        # "burn": ["singed", "charred", "melted"],
+        "burn": ["singed", "charred", "melted"],
     }
     # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
     aes_FX = {
-        # "cold": ["frosted", "frozen"],
+        "cold": ["frosted", "frozen"],
         "blood": [
             "blood-speckled",
             "blood-spattered",
@@ -95,6 +95,7 @@ class TreasureObject:
         self.dictAttr = {}
         self.dictTrait = {}
         self.dictComp = {}
+        self.dictAdd = {}
         self.parent = None
 
         self.Value = 0
@@ -110,10 +111,10 @@ class TreasureObject:
             c.parent = self
         shuffle(self)
 
-        for k, v in self.dmg.items():
-            self.dmg[k] = npr.randint(0, 100)
-        for k, v in self.aes.items():
-            self.aes[k] = npr.randint(0, 100)
+        for k in self.dmg:
+            self.dmg[k] = npr.randint(0, 30)
+        for k in self.aes:
+            self.aes[k] = npr.randint(0, 50)
         # self.__str__ = self.strself
         # self.Appraise()
 
@@ -132,8 +133,8 @@ class TreasureObject:
         targ = other or self
 
         for k, v in targ.material.dmg_FX.items():
-            desc = [""] + targ.material.dmg_FX[k]
-            thresholds = [int((100/len(desc)) * i)  for i in range(len(desc))]
+            desc = [""] + v
+            thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
             adj = ""
             for i in range(len(desc)):
                 if targ.dmg[k] > thresholds[i]:
@@ -141,8 +142,8 @@ class TreasureObject:
             adjs.append(adj)
 
         for k, v in targ.material.aes_FX.items():
-            desc = [""] + targ.material.aes_FX[k]
-            thresholds = [int((100/len(desc)) * i)  for i in range(len(desc))]
+            desc = [""] + v
+            thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
             adj = ""
             for i in range(len(desc)):
                 if targ.aes[k] > thresholds[i]:
@@ -160,7 +161,9 @@ class TreasureObject:
         adjectives = adjectives or self.get_adj() or []
         # adjectives = [adj.__name__.lower() if type(adj) != str else adj for adj in adjectives]
         name = self.TreasureType
-        name = " ".join([s.strip() for s in [sequence_words(adjectives), prefix, name] if s])
+        name = " ".join(
+            [s.strip() for s in [sequence_words(adjectives), prefix, name] if s]
+        )
         generic = get_a(name.strip(), True)
         if self.TreasureLabel and not use_generic:
             n = self.TreasureLabel
@@ -184,8 +187,7 @@ class TreasureObject:
         for a in self.dictTrait:  # Print object traits (one of each)
             if a not in NoDescribe:
                 o += form_out(
-                    f"Its {a.lower()} is {sequence_words(self.dictTrait[a])}.",
-                    pad,
+                    f"Its {a.lower()} is {sequence_words(self.dictTrait[a])}.", pad
                 )
         for a, obj in self.dictComp.items():  # Describe sub-objects
             # aa = self.dictComp[a]

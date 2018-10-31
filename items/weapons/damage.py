@@ -10,9 +10,6 @@ from .structure import WPart
 class Damager(WPart):
     size = 10
     type_damage = {  # Coefficients of each damage type done by this component
-        "Crush": {"Density": 1, "Hardness": 0.5, "Flexibility": -0.2},
-        "Pierce": {"Density": 0.3, "Hardness": 1, "Flexibility": 0.5},
-        "Slice": {"Density": 0.2, "Hardness": 1, "Flexibility": 1},
     }
 
     # How much damage does it do? (This will be greatly multiplied later)
@@ -32,6 +29,7 @@ class Damager(WPart):
 
 class Blade(Damager):
     """A long flat plane with sharp edges"""
+
     size = 8
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 1, "Hardness": 0.5, "Flexibility": -0.2},
@@ -52,6 +50,7 @@ class Blade(Damager):
 
 class BladeBig(Damager):
     """A long flat plane with sharp edges"""
+
     size = 14
     base_damage = 12
     base_speed = 6
@@ -66,9 +65,10 @@ class BladeBig(Damager):
 
 class Sphere(Damager):
     """A basic and smooth orb"""
+
     size = 2
     type_damage = {  # Coefficients of each damage type done by this component
-        "Crush": {"Density": 1.4, "Hardness": 0.2, "Flexibility": 0},
+        "Crush": {"Density": 1.4, "Hardness": 0.2, "Flexibility": 0}
     }
     Effectiveness = 2
     DamageTypesGood = [0]
@@ -77,9 +77,10 @@ class Sphere(Damager):
 
 class HeadClub(Damager):
     """A smooth heavy block or cylinder"""
+
     size = 6
     type_damage = {  # Coefficients of each damage type done by this component
-        "Crush": {"Density": 2.4, "Hardness": 0.1, "Flexibility": 0.2},
+        "Crush": {"Density": 2.4, "Hardness": 0.1, "Flexibility": 0.2}
     }
     Effectiveness = 8
     DamageTypesGood = [0]
@@ -88,6 +89,7 @@ class HeadClub(Damager):
 
 class HeadMace(Damager):
     """A heavy cylinder, with flanges or blades attached"""
+
     size = 6
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
@@ -100,6 +102,7 @@ class HeadMace(Damager):
 
 class HeadStar(Damager):
     """A heavy mass, with spikes attached"""
+
     size = 6
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
