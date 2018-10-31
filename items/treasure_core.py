@@ -64,6 +64,7 @@ class TreasureObject:
     #     - a LIST containing between INT1 and INT2, inclusive, elements from LIST1
     traits = {}
     # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given trait
+    # TODO: Dict of Adjectives to be placed immediately before the name and not describe()d; Material of weapon, color of liquid, etc
     components = {}
     # COMPONENTS: Sub-objects that make up this object; Should be class name
     additions = {}

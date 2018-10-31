@@ -40,9 +40,22 @@ class Blade(Damager):
     DamageTypesGood = [2]
     DamageTypesBad = []
 
-    traits = {"Material": materials.Metal.weapons}
     base_durability = 4
     TreasureType = "typical blade"
+
+
+class BladeBig(Damager):
+    """A long flat plane with sharp edges"""
+    size = 14
+    base_damage = 12
+    base_speed = 6
+
+    Effectiveness = 5
+    DamageTypesGood = [2]
+    DamageTypesBad = [1]
+
+    base_durability = 4
+    TreasureType = "great blade"
 
 
 class Sphere(Damager):
@@ -68,7 +81,7 @@ class HeadClub(Damager):
     }
     Effectiveness = 8
     DamageTypesGood = [0]
-    TreasureType = "hammer head"
+    TreasureType = "club head"
 
 
 class HeadMace(Damager):
@@ -94,4 +107,4 @@ class HeadStar(Damager):
     }
     Effectiveness = 8
     DamageTypesGood = [0]
-    TreasureType = "spiked flail head"
+    TreasureType = "spiked star head"

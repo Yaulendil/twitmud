@@ -57,6 +57,16 @@ class Sword(Weapon):
         return super().strself(*a, **kw)
 
 
+class Greatsword(Sword):
+    components = {
+        "Blade": damage.BladeBig,
+        "Pommel": damage.Sphere,
+        "Handle": structure.HandleLong,
+        "Guard": structure.Crossguard,
+    }
+    TreasureType = "Greatsword"
+
+
 class Club(Weapon):
     components = {
         "Head": damage.HeadClub,
@@ -88,4 +98,4 @@ class Star(Club):
 
 
 def random_weapon():
-    return choose_from([Sword, Club, Mace, Star])[0]
+    return choose_from([Sword, Greatsword, Club, Mace, Star])[0]
