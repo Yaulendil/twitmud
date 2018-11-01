@@ -94,6 +94,7 @@ class TreasureObject:
             "sanguinated",
         ],
     }
+    size = 3
 
     def __init__(self, *args, **kwargs):
         self.dictAttr = {}
@@ -116,17 +117,10 @@ class TreasureObject:
                     continue
             else:
                 choice = v
-            c = choice()
+            c = choice(*args, **kwargs)
             self.dictComp[comp] = c
             c.parent = self
         shuffle(self)
-
-        # for k in self.dmg:
-        #     self.dmg[k] = npr.randint(0, 30)
-        # for k in self.aes:
-        #     self.aes[k] = npr.randint(0, 50)
-        # self.__str__ = self.strself
-        # self.Appraise()
 
     @property
     def material(self):

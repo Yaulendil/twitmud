@@ -24,10 +24,15 @@ class Damager(WPart):
     DamageTypesBad = []  # List of damage types that this component is bad for
     # 0: Crush, 1: Pierce, 2: Slice
 
-    # traits = {"Material": (materials.Metal.weapons, [100, 90, 50, 1])}
-    traits = {"Material": [materials.Steel]}
+    traits = {"Material": (materials.Metal.weapons, [100, 90, 50, 1])}
+    # traits = {"Material": [materials.Steel]}
     base_durability = 5
     TreasureType = "Weapon Component"
+
+    def __init__(self, *a, override_material, **kw):
+        super().__init__(*a, **kw)
+        if override_material:
+            self.dictTrait["Material"] = override_material
 
     def damage_rating(self, split=True):
         # Amount of damage contributed by this component
@@ -43,6 +48,7 @@ class Damager(WPart):
                     dmore = getattr(self.material, damage_stat) * coeff * self.size
                     # print(str(dmore), "from", getattr(self.material, damage_stat), damage_stat, "(" + self.material.__name__ + ")")
                     damage += dmore
+                damage = damage * (1 - self.dmg["phys"]/1000)
                 d.append(damage/100)
 
             for i in range(len(d)):
@@ -85,7 +91,7 @@ class BladeBig(Blade):
     base_damage = 12
     base_speed = 6
 
-    Effectiveness = 5
+    Effectiveness = 4
     DamageTypesGood = [2]
     DamageTypesBad = [1]
 
@@ -99,7 +105,7 @@ class BladeSmall(Blade):
     base_damage = 8
     base_speed = 11
 
-    Effectiveness = 2
+    Effectiveness = 3
     DamageTypesGood = [1, 2]
     DamageTypesBad = [0]
 

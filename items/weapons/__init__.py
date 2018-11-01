@@ -20,12 +20,18 @@ class Weapon(TreasureObject):
             r = self.dictComp["Handle"].size
         except:
             r = 0
+        try:
+            r += self.dictComp[self.damager].size
+        except:
+            pass
         return r
 
     def speed(self, base=None):
         base = base or self.dictComp[self.damager].base_speed or 10
-        speed = 1000 * base / self.weight()
-        return round(speed,2)
+        # speed = (1000 * base / self.weight()) / ((self.reach + 1) / 10)
+        speed = (1000 * base) / (self.weight() + self.reach)
+        # return speed
+        return round(speed, 2)
 
     def calc_size(self):
         s = 1
@@ -52,17 +58,21 @@ class Weapon(TreasureObject):
         if solo:
             o += pad + f"'This is {self}.'"
         d = self.calc_damage()
+        dsum = round(sum(d), 2)
         o += form_out(
             "It does "
             # + "/".join([str(round(i, 2)) for i in d])
             + str([str(round(i, 2)) for i in d])
             + " C/P/S damage for "
-            + str(round(sum(d), 2))
+            + str(dsum)
             + " ideal-total.",
             pad,
         )
-        o += form_out(f"It has a weight of {str(self.weight())} "
-                      + f"for a speed of {str(self.speed())}.", pad)
+        wgh = self.weight()
+        spd = self.speed()
+        o += form_out(f">> It has a weight of {str(wgh)} "
+                      + f"for a speed of {str(spd)}.", pad)
+        o += form_out(f">> It does {str(round((dsum + spd) / 10, 2))} DPS.", pad)
         o += super().describe(False, pad, full)
         return o
 
@@ -99,13 +109,22 @@ class Dagger(Sword):
     TreasureType = "Dagger"
 
 
+class Glaive(Sword):
+    components = {
+        "Blade": damage.Blade,
+        "Counterweight": damage.Sphere,
+        "Handle": structure.HandleLonger,
+    }
+    TreasureType = "Glaive"
+
+
 class Club(Weapon):
     """A bludgeon meant to crush bones through hard armor"""
 
     components = {
         "Head": damage.HeadClub,
         "Handle": structure.HandleLong,
-        # "Counterweight": [None, damage.Sphere],
+        "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Club"
     damager = "Head"
@@ -115,7 +134,7 @@ class Mace(Club):
     components = {
         "Head": damage.HeadMace,
         "Handle": structure.HandleLong,
-        # "Counterweight": [None, damage.Sphere],
+        "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Mace"
 
@@ -124,7 +143,7 @@ class MaceCav(Club):
     components = {
         "Head": damage.HeadMace,
         "Handle": structure.HandleLonger,
-        # "Counterweight": [None, damage.Sphere],
+        "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Cavalry Mace"
 
@@ -133,7 +152,7 @@ class Star(Club):
     components = {
         "Head": damage.HeadStar,
         "Handle": structure.HandleLong,
-        # "Counterweight": [None, damage.Sphere],
+        "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Star"
 
@@ -142,16 +161,25 @@ class Axe(Weapon):
     components = {
         "Head": damage.HeadAxe,
         "Handle": structure.HandleLong,
-        # "Counterweight": [None, damage.Sphere],
+        "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Axe"
     damager = "Head"
 
 
+class Halberd(Axe):
+    components = {
+        "Head": damage.HeadAxe,
+        "Handle": structure.HandleLonger,
+        "Counterweight": [None, damage.Sphere],
+    }
+    TreasureType = "Halberd"
+
+
 swords = [Sword, Greatsword, Dagger]
 bludgeons = [Club, Mace, Star]
 cleavers = [Axe]
-polearms = [MaceCav]
+polearms = [Glaive, MaceCav, Halberd]
 
 weapons = [swords, bludgeons, cleavers, polearms]
 
@@ -160,8 +188,8 @@ def random_weapon():
     return choose_from(weapons)[0]
 
 
-def test_weapons():
+def test_weapon(full=False, mat=None):
     for a in weapons:
         for b in a:
-            print(b().describe(full=True))
+            print(b(override_material=mat).describe(full=full))
             print("")
