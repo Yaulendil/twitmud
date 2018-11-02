@@ -170,19 +170,18 @@ class TreasureObject:
         return adjs
 
     def strself(self, *, use_generic=False, adjectives=None, prefix=""):
-        # if adjectives is None:
-        #     adjectives = []
         adjectives = adjectives or self.get_adj() or []
-        # adjectives = [adj.__name__.lower() if type(adj) != str else adj for adj in adjectives]
         name = self.TreasureType
         name = " ".join(
             [s.strip() for s in [sequence_words(adjectives), prefix, name] if s]
         )
+
         generic = get_a(name.strip(), True)
         if self.TreasureLabel and not use_generic:
             n = self.TreasureLabel
         else:
             n = generic
+
         # adj = sequence_words(self.get_adj() + adjectives)
         # return " ".join([adj, n]).strip()
         return n.strip()
@@ -192,17 +191,21 @@ class TreasureObject:
 
     def describe(self, solo=True, pad="", full=False):
         o = ""
+
         if solo:
             o += pad + f"'This is {self}.'"
+
         for a in self.dictAttr:  # Print object attributes (variable number)
             aa = sequence_words(self.dictAttr[a])
             if aa != "":
                 o += form_out(f"Its {a.lower()} is {str(aa)}.", pad)
+
         for a in self.dictTrait:  # Print object traits (one of each)
             if a not in NoDescribe:
                 o += form_out(
                     f"Its {a.lower()} is {sequence_words(self.dictTrait[a])}.", pad
                 )
+
         for a, obj in self.dictComp.items():  # Describe sub-objects
             # aa = self.dictComp[a]
             adesc = obj.describe(solo=False, pad=pad + "|", full=full)
