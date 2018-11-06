@@ -33,8 +33,8 @@ class Damager(WPart):
 
     def __init__(self, *a, override_material=None, **kw):
         super().__init__(*a, **kw)
-        # if override_material:
-        #     self.dictTrait["Material"] = override_material
+        if override_material:
+            self.material = override_material
 
     def damage_rating(self, split=True):
         # Amount of damage contributed by this component
@@ -112,6 +112,20 @@ class BladeSmall(Blade):
     DamageTypesBad = [0]
 
     TreasureType = "small blade"
+
+
+class BladeCurved(Blade):
+    """A short flat plane with sharp edges"""
+
+    size = 8
+    base_damage = 11
+    base_speed = 14
+
+    Effectiveness = 4
+    DamageTypesGood = [2]
+    DamageTypesBad = [0, 1]
+
+    TreasureType = "curved blade"
 
 
 class HeadClub(Damager):

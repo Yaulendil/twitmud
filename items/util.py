@@ -59,11 +59,11 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
         traits = item.dictTrait
         attributes = item.dictAttr
         additional = item.dictAdd
-        adjectives = item.adjectives
+        adjectives = item.get_adj()
 
         # Print object adjectives as a single line
         if adjectives:
-            line_out.append(f"{rail}# It is {grammar.sequence_words(adjectives)}.")
+            line_out.append(f"{rail}! It is {grammar.sequence_words(adjectives)}.")
 
         # Print object attributes (variable number)
         for a, v in attributes.items():
@@ -81,6 +81,7 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
 
     if recursive:
         for i, v in enumerate(components.items()):
+            line_out.append("|")
             prefix_first, prefix_rest = (
                 ("\\_", "  ") if i == len(components) - 1 else ("|_", "| ")
             )
@@ -98,4 +99,4 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
 def describe_item(item):
     line_in = item_description(item)
     line_out = "\n".join(line_in)
-    print(line_out)
+    print("\n" + line_out + "\n")

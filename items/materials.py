@@ -238,6 +238,22 @@ class Wood(Material):
     Hardness = 30
     Toughness = 30
     Flexibility = 200
+    # Damage FX; Adjectives applied when item is damaged
+    dmg_FX = {
+        "phys": ["cracked", "splintering", "broken"],
+        "burn": ["singed", "charred", "burnt"],
+    }
+    # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
+    aes_FX = {
+        # "cold": ["frosted", "frozen"],
+        "blood": [
+            "blood-speckled",
+            "blood-spattered",
+            "bloody",
+            "bloodsoaked",
+            "sanguinated",
+        ],
+    }
 
 
 class Oak(Wood):
@@ -278,7 +294,7 @@ class Textile(Material):
     # Damage FX; Adjectives applied when item is damaged
     dmg_FX = {
         "phys": ["worn", "frayed", "torn", "ripped", "shredded"],
-        # "burn": ["singed", "charred", "melted"],
+        "burn": ["singed", "charred", "burnt"],
     }
     # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
     aes_FX = {

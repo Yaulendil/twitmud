@@ -1,6 +1,9 @@
+import jsonpickle
 from numpy import random as npr
 
-# Traits NOT to list (normally) in *.describe()
+from . import materials
+
+jsonpickle.set_encoder_options('simplejson', sort_keys=True, indent=2)
 DEBUG = False
 
 
@@ -16,7 +19,7 @@ def choose_from(choices: list, q=1, probability: list = None):
     Probability will be a list of numbers and overrides a probability list packed with the choices.
     Choose Q objects from Choices and return them.
     """
-    if type(choices) not in [tuple, list]:
+    if type(choices) not in [tuple, list, range]:
         # If Choices is a single item, return it immediately.
         return choices
 
@@ -68,7 +71,7 @@ class TreasureObject:
     # A value in the ATTRDICT of an instance of this class will then be:
     #     - a LIST containing between INT1 and INT2, inclusive, elements from LIST1
     traits = {}
-    # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given trait
+    # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given traitz
     components = {}
     # COMPONENTS: Sub-objects that make up this object; Should be class name
     additions = {}
@@ -78,41 +81,28 @@ class TreasureObject:
 
     TreasureType = "Generic Treasure"
     BaseType = "item"
-
-    # Damage FX; Adjectives applied when item is damaged
-    dmg_FX = {
-        "phys": ["dented", "chipped", "cracked", "broken"],
-        "burn": ["singed", "charred", "melted"],
-    }
-    # Aesthetic FX; Adjectives applied when item is cold, bloody, etc
-    aes_FX = {
-        "cold": ["frosted", "frozen"],
-        "blood": [
-            "blood-speckled",
-            "blood-spattered",
-            "bloody",
-            "bloodsoaked",
-            "sanguinated",
-        ],
-    }
     size = 3
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, material=None, **kwargs):
         self.dictAttr = {}
         self.dictTrait = {}
         self.dictComp = {}
         self.dictAdd = {}
+
         self.adjectives = []
+        self.material = (material or choose_from(self.materials)[0]) if self.materials else None
 
         self.Value = 0
         self.TreasureLabel = None
-        self.material = choose_from(self.materials)[0] if self.materials else None
 
         self.hp = 100
-        self.dmg = {x: 0 for x in list(self.dmg_FX)}
-        self.aes = {x: 0 for x in list(self.aes_FX)}
-        # self.dmg = {x: npr.randint(0, 90) for x in list(self.dmg_FX)}
-        # self.aes = {x: npr.randint(0, 90) for x in list(self.aes_FX)}
+
+        dmg = list(range(0,90,9))
+        chance = list(range(0,10,1))
+        chance.reverse()
+
+        self.dmg = {x: choose_from(dmg, probability=chance)[0] for x in list(materials.Material.dmg_FX)}
+        self.aes = {x: choose_from(dmg, probability=chance)[0] for x in list(materials.Material.aes_FX)}
 
         for comp, v in self.components.items():
             if type(v) == list:
@@ -125,6 +115,34 @@ class TreasureObject:
             self.dictComp[comp] = c
         shuffle(self)
 
+    def get_adj(self, other=None):
+        adjs = []
+        targ = other or self
+
+        if targ.material:
+            for k, v in targ.material.dmg_FX.items():
+                desc = [""] + v
+                thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
+                adj = ""
+                for i in range(len(desc)):
+                    if targ.dmg[k] > thresholds[i]:
+                        adj = desc[i]
+                adjs.append(adj)
+
+            for k, v in targ.material.aes_FX.items():
+                desc = [""] + v
+                thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
+                adj = ""
+                for i in range(len(desc)):
+                    if targ.aes[k] > thresholds[i]:
+                        adj = desc[i]
+                adjs.append(adj)
+
+        while "" in adjs:
+            adjs.remove("")
+
+        return adjs
+
     def weight(self):
         w = 0
         try:
@@ -134,6 +152,13 @@ class TreasureObject:
         for k, v in self.dictComp.items():
             w += v.weight()
         return w
+
+    def serialize(self):
+        return jsonpickle.encode(self)
+
+    def save(self, fname):
+        with open(fname, "w") as fh:
+            fh.write(self.serialize())
 
     def clone(self, fulldata=True):
         """
@@ -145,3 +170,20 @@ class TreasureObject:
             history or given name of a historical sword
         """
         pass
+
+    def __getitem__(self, key):
+        keys = list(self.components.keys())
+        comp = self.dictComp.get(keys[key], IndexError(f"{self.__class__.__name__} has no component {key}"))
+        if type(comp) == IndexError:
+            raise comp
+        return comp
+
+    def __setitem__(self, key, value):
+        keys = list(self.components.keys())
+        self.dictComp[keys[key]] = value
+
+    def __delitem__(self, key):
+        keys = list(self.components.keys())
+        del self.dictComp[keys[key]]
+
+

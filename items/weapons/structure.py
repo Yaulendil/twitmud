@@ -15,9 +15,6 @@ class WPart(TreasureObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
-        # Base values; Multiplied later
-        # self.size = 1
-        # # Approximate volume occupied by the component; Affects reach and weight
         self.hp = self.base_durability * self.material.Toughness
         # "Health" of a part determines when it breaks and what its damage adjective is
 
@@ -28,33 +25,33 @@ class WPart(TreasureObject):
 
 class Grip(WPart):
     size = 0.5
-    traits = {"Material": materials.Textile.common}
+    materials = materials.Textile.common
     TreasureType = "simple wrapping"
 
 
 class GripWide(WPart):
     size = 1.5
-    traits = {"Material": materials.Textile.common}
+    materials = materials.Textile.common
     TreasureType = "long wrapping"
 
 
 class Handle(WPart):
     size = 3
-    traits = {"Material": materials.Metal.structure + materials.Wood.structure}
+    materials = materials.Metal.structure + materials.Wood.structure
     components = {"Grip": [None, Grip]}
     TreasureType = "straight handle"
 
 
 class HandleLong(WPart):
     size = 8
-    traits = {"Material": materials.Metal.structure + materials.Wood.structure}
+    materials = materials.Metal.structure + materials.Wood.structure
     components = {"Grip": [None, GripWide]}
     TreasureType = "long handle"
 
 
 class HandleLonger(WPart):
     size = 14
-    traits = {"Material": materials.Metal.structure + materials.Wood.structure}
+    materials = materials.Metal.structure + materials.Wood.structure
     components = {
         "Upper Grip": [None, Grip, GripWide],
         "Lower Grip": [None, Grip, GripWide],

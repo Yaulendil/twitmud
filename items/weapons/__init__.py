@@ -1,8 +1,8 @@
-from numpy import add as npadd, round
+from numpy import add as npadd
 
 from . import damage, structure
 from items.treasure_core import TreasureObject, choose_from
-
+from items import util
 
 class Weapon(TreasureObject):
     TreasureType = "Generic Weapon"
@@ -12,7 +12,7 @@ class Weapon(TreasureObject):
     def __init__(self, *args, **kwargs):
         # WEAPONS deal damage determined by their components
         super().__init__(self, *args, **kwargs)
-        self.damage = self.calc_damage()
+        self.calc_damage()
         try:
             self.material = self.dictComp[self.damager].material
         except:
@@ -45,7 +45,8 @@ class Weapon(TreasureObject):
         d = [0, 0, 0]
         for comp in self.dictComp:
             d = npadd(d, self.dictComp[comp].damage_rating(True))
-        return list(d)
+        self.damage = [round(float(dd), 2) for dd in list(d)]
+        return self.damage
 
 
 class Sword(Weapon):
@@ -53,9 +54,9 @@ class Sword(Weapon):
 
     components = {
         "Blade": damage.Blade,
-        "Pommel": damage.Sphere,
-        "Handle": structure.Handle,
         "Guard": [structure.Crossguard, structure.Roundguard],
+        "Handle": structure.Handle,
+        "Pommel": damage.Sphere,
     }
     TreasureType = "Sword"
     damager = "Blade"
@@ -64,9 +65,9 @@ class Sword(Weapon):
 class Greatsword(Sword):
     components = {
         "Blade": damage.BladeBig,
-        "Pommel": damage.Sphere,
-        "Handle": structure.HandleLong,
         "Guard": structure.Crossguard,
+        "Handle": structure.HandleLong,
+        "Pommel": damage.Sphere,
     }
     TreasureType = "Greatsword"
 
@@ -74,18 +75,28 @@ class Greatsword(Sword):
 class Dagger(Sword):
     components = {
         "Blade": damage.BladeSmall,
-        "Pommel": damage.Sphere,
-        "Handle": structure.Handle,
         "Guard": structure.Roundguard,
+        "Handle": structure.Handle,
+        "Pommel": damage.Sphere,
     }
     TreasureType = "Dagger"
+
+
+class Falchion(Sword):
+    components = {
+        "Blade": damage.BladeCurved,
+        "Guard": structure.Roundguard,
+        "Handle": structure.Handle,
+        "Pommel": damage.Sphere,
+    }
+    TreasureType = "Falchion"
 
 
 class Glaive(Sword):
     components = {
         "Blade": damage.Blade,
-        "Counterweight": damage.Sphere,
         "Handle": structure.HandleLonger,
+        "Counterweight": damage.Sphere,
     }
     TreasureType = "Glaive"
 
@@ -148,7 +159,7 @@ class Halberd(Axe):
     TreasureType = "Halberd"
 
 
-swords = [Sword, Greatsword, Dagger]
+swords = [Sword, Falchion, Greatsword, Dagger]
 bludgeons = [Club, Mace, Star]
 cleavers = [Axe]
 polearms = [Glaive, MaceCav, Halberd]
@@ -163,5 +174,8 @@ def random_weapon():
 def test_weapon(full=False, mat=None):
     for a in weapons:
         for b in a:
-            print(b(override_material=mat).describe(full=full))
-            print("")
+            bb = b(override_material=mat)
+            util.describe_item(bb)
+            bb.save("weapons/" + bb.__class__.__name__.lower() + ".json")
+            # print(b(override_material=mat).describe(full=full))
+            # print("")
