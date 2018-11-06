@@ -4,10 +4,10 @@ from items import treasure_core
 
 def title_item(item):
     given_name = item.TreasureLabel
-    core_name = item.TreasureType
+    core_name = item.TreasureType.lower()
 
     if item.material:
-        core_name = " ".join([item.material.__name__, core_name])
+        core_name = " ".join([item.material.__name__.lower(), core_name])
 
     adjs = item.adjectives
     if adjs:
@@ -24,10 +24,33 @@ def title_item(item):
 
 def item_description(item, *, top=True, minimal=False, recursive=True):
     components = item.dictComp
+    rail = "|" if components else " "
     line_out = [title_item(item)]
 
     if top:
         line_out[0] = "This is " + line_out[0] + "."
+
+    try:
+        # See if it is a weapon object
+        d = item.calc_damage()
+        dsum = round(sum(d), 2)
+        wgh = item.weight()
+        spd = item.speed()
+        line_out.append(f"{rail}> It does {str([str(round(i, 2)) for i in d])} C/P/S damage for {str(dsum)} ideal-total.")
+        line_out.append(f"{rail}> It has a weight of {str(wgh)} for a speed of {str(spd)}.")
+        line_out.append(f"{rail}> It does {str(round((dsum + spd) / 10, 2))} DPS.")
+    except AttributeError:
+        pass
+
+    try:
+        # See if it is part of a weapon object
+
+        d = item.damage_rating()
+        dstr = [str(n) for n in d]
+        if sum(d) > 0:
+            line_out.append(f"{rail}+ It contributes {dstr} C/P/S damage to its parent.")
+    except AttributeError:
+        pass
 
     if not minimal:
         # If the function was not told to be minimal, return a few more lines of flavor text
@@ -35,7 +58,6 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
         attributes = item.dictAttr
         additional = item.dictAdd
         adjectives = item.adjectives
-        rail = "|" if components else " "
 
         # Print object adjectives as a single line
         if adjectives:
