@@ -29,7 +29,7 @@ class Damager(WPart):
     base_durability = 5
     TreasureType = "Weapon Component"
 
-    def __init__(self, *a, override_material, **kw):
+    def __init__(self, *a, override_material=None, **kw):
         super().__init__(*a, **kw)
         if override_material:
             self.dictTrait["Material"] = override_material
