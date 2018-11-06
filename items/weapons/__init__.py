@@ -1,10 +1,10 @@
 from numpy import add as npadd
 
 from . import damage, structure
-from items.treasure_core import TreasureObject, choose_from
-from items import util
+from .. import treasure_core
+from .. import util
 
-class Weapon(TreasureObject):
+class Weapon(treasure_core.TreasureObject):
     TreasureType = "Generic Weapon"
     BaseType = "weapon"
     damager = None
@@ -13,10 +13,13 @@ class Weapon(TreasureObject):
         # WEAPONS deal damage determined by their components
         super().__init__(self, *args, **kwargs)
         self.calc_damage()
+
+    @property
+    def material(self):
         try:
-            self.material = self.dictComp[self.damager].material
+            return self.dictComp[self.damager].material
         except:
-            pass
+            return None
 
     @property
     def reach(self):
@@ -168,14 +171,12 @@ weapons = [swords, bludgeons, cleavers, polearms]
 
 
 def random_weapon():
-    return choose_from(weapons)[0]
+    return treasure_core.choose_from(weapons)[0]
 
 
-def test_weapon(full=False, mat=None):
+def test_weapon(minimal=False, mat=None, norecurse=False):
     for a in weapons:
         for b in a:
             bb = b(override_material=mat)
-            util.describe_item(bb)
-            bb.save("weapons/" + bb.__class__.__name__.lower() + ".json")
-            # print(b(override_material=mat).describe(full=full))
-            # print("")
+            util.describe_item(bb, minimal=minimal, norecurse=norecurse)
+            # bb.save("weapons/" + bb.__class__.__name__.lower() + ".json")

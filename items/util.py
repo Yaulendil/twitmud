@@ -6,7 +6,7 @@ def title_item(item):
     core_name = item.TreasureType.lower()
 
     if item.material:
-        core_name = " ".join([item.material.__name__.lower(), core_name])
+        core_name = " ".join([item.material.__adj__.lower(), core_name])
 
     adjs = item.adjectives
     if adjs:
@@ -14,16 +14,15 @@ def title_item(item):
     else:
         name = core_name
 
-    aname = grammar.get_a(name, include=True)
     if given_name:
         return given_name + ", the " + name
     else:
-        return aname
+        return grammar.get_a(name, include=True)
 
 
 def item_description(item, *, top=True, minimal=False, recursive=True):
     components = item.dictComp
-    rail = "|" if components else " "
+    rail = "|" if components and recursive else " "
     line_out = [title_item(item)]
 
     if top:
@@ -36,7 +35,7 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
         wgh = item.weight()
         spd = item.speed()
         line_out += [
-            f"{rail}> It does {str([str(round(i, 2)) for i in d])} C/P/S damage for {str(dsum)} ideal-total.",
+            f"{rail}> It does {str([round(i, 2) for i in d])} C/P/S damage for {str(dsum)} ideal-total.",
             f"{rail}> It has a weight of {str(wgh)} for a speed of {str(spd)}.",
             f"{rail}> It does {str(round((dsum + spd) / 10, 2))} DPS.",
         ]
@@ -85,7 +84,9 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
             prefix_first, prefix_rest = (
                 ("\\_", "  ") if i == len(components) - 1 else ("|_", "| ")
             )
-            ret = item_description(v[1], top=False)
+            ret = item_description(
+                v[1], top=False, minimal=minimal, recursive=recursive
+            )
 
             line_return = [
                 prefix_first + "[{}] Its {} is {}.".format(i, v[0].lower(), ret.pop(0))
@@ -96,7 +97,7 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
     return line_out
 
 
-def describe_item(item):
-    line_in = item_description(item)
+def describe_item(item, minimal=False, norecurse=False):
+    line_in = item_description(item, minimal=minimal, recursive=not norecurse)
     line_out = "\n".join(line_in)
     print("\n" + line_out + "\n")

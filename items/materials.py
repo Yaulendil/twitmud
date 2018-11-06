@@ -123,6 +123,7 @@ class Material:
             "sanguinated",
         ],
     }
+    __adj__ = "Physical"
 
     def __init__(self, amount):
         self.amount = amount
@@ -148,6 +149,7 @@ class Metal(Material):
             "sanguinated",
         ],
     }
+    __adj__ = "Metal"
 
 
 class Iron(Metal):
@@ -157,6 +159,7 @@ class Iron(Metal):
     Hardness = 100
     Toughness = 100
     Flexibility = 100
+    __adj__ = "Iron"
 
 
 class Steel(Metal):
@@ -166,6 +169,7 @@ class Steel(Metal):
     Hardness = 200
     Toughness = 200
     Flexibility = 100
+    __adj__ = "Steel"
 
 
 class Brass(Metal):
@@ -175,6 +179,7 @@ class Brass(Metal):
     Hardness = 60
     Toughness = 130
     Flexibility = 50
+    __adj__ = "Brass"
 
 
 class Bronze(Metal):
@@ -184,6 +189,7 @@ class Bronze(Metal):
     Hardness = 100
     Toughness = 90
     Flexibility = 100
+    __adj__ = "Brazen"
 
 
 class Copper(Metal):
@@ -193,6 +199,7 @@ class Copper(Metal):
     Hardness = 100
     Toughness = 75
     Flexibility = 100
+    __adj__ = "Copper"
 
 
 class Silver(Metal):
@@ -202,6 +209,7 @@ class Silver(Metal):
     Hardness = 50
     Toughness = 85
     Flexibility = 100
+    __adj__ = "Silver"
 
 
 class Gold(Metal):
@@ -211,6 +219,7 @@ class Gold(Metal):
     Hardness = 30
     Toughness = 80
     Flexibility = 100
+    __adj__ = "Golden"
 
 
 class Mithril(Metal):
@@ -220,6 +229,7 @@ class Mithril(Metal):
     Hardness = 400
     Toughness = 200
     Flexibility = 150
+    __adj__ = "Mithril"
 
 
 class Adamantium(Metal):
@@ -229,6 +239,7 @@ class Adamantium(Metal):
     Hardness = 70
     Toughness = 220
     Flexibility = 20
+    __adj__ = "Adamantine"
 
 
 class Wood(Material):
@@ -254,34 +265,35 @@ class Wood(Material):
             "sanguinated",
         ],
     }
+    __adj__ = "Wooden"
 
 
 class Oak(Wood):
-    pass
+    __adj__ = "Oaken"
 
 
 class Elm(Wood):
-    pass
+    __adj__ = "Elm"
 
 
 class Maple(Wood):
-    pass
+    __adj__ = "Maple"
 
 
 class Redwood(Wood):
-    pass
+    __adj__ = "Redwood"
 
 
 class Willow(Wood):
-    pass
+    __adj__ = "Willow"
 
 
 class Mahogany(Wood):
-    pass
+    __adj__ = "Mahogany"
 
 
 class Spruce(Wood):
-    pass
+    __adj__ = "Spruce"
 
 
 class Textile(Material):
@@ -307,26 +319,27 @@ class Textile(Material):
             "sanguinated",
         ],
     }
+    __adj__ = "Textile"
 
 
 class Leather(Textile):
-    pass
+    __adj__ = "Leather"
 
 
 class Silk(Textile):
-    pass
+    __adj__ = "Silken"
 
 
 class Cotton(Textile):
-    pass
+    __adj__ = "Cotton"
 
 
 class Canvas(Textile):
-    pass
+    __adj__ = "Canvas"
 
 
 class Wool(Textile):
-    pass
+    __adj__ = "Woollen"
 
 
 class Gemstone(Material):
@@ -336,12 +349,14 @@ class Gemstone(Material):
     Hardness = 300
     Toughness = 10
     Flexibility = 20
+    __adj__ = "Crystalline"
 
 
 Metal.weapons = [[Iron, Copper, Bronze], [Steel], [Silver, Gold], [Mithril, Adamantium]]
 Metal.decor = [[Copper, Bronze, Brass], [Silver], [Gold]]
 Metal.structure = [[Copper, Bronze, Brass], [Iron], [Steel]]
 
+Wood.all = [Oak, Elm, Maple, Redwood, Willow, Mahogany, Spruce]
 Wood.structure = [Oak, Spruce, Maple]
 
 Textile.all = [Leather, Silk, Cotton, Canvas, Wool]

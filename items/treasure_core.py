@@ -1,9 +1,9 @@
 import jsonpickle
-from numpy import random as npr
+from numpy import random as npr, square
 
 from . import materials
 
-jsonpickle.set_encoder_options('simplejson', sort_keys=True, indent=2)
+jsonpickle.set_encoder_options("simplejson", indent=2)
 DEBUG = False
 
 
@@ -88,21 +88,32 @@ class TreasureObject:
         self.dictTrait = {}
         self.dictComp = {}
         self.dictAdd = {}
-
         self.adjectives = []
-        self.material = (material or choose_from(self.materials)[0]) if self.materials else None
+
+        try:
+            self.material = (
+                (material or choose_from(self.materials)[0]) if self.materials else None
+            )
+        except:
+            pass
 
         self.Value = 0
         self.TreasureLabel = None
 
         self.hp = 100
 
-        dmg = list(range(0,90,9))
-        chance = list(range(0,10,1))
-        chance.reverse()
+        dmg = list(range(0, 90, 10))
+        chance = list(square(range(1, 10)))
+        chance.reverse()  # Lower values more likely
 
-        self.dmg = {x: choose_from(dmg, probability=chance)[0] for x in list(materials.Material.dmg_FX)}
-        self.aes = {x: choose_from(dmg, probability=chance)[0] for x in list(materials.Material.aes_FX)}
+        self.dmg = {
+            x: choose_from(dmg, probability=chance)[0]
+            for x in list(materials.Material.dmg_FX)
+        }
+        self.aes = {
+            x: choose_from(dmg, probability=chance)[0]
+            for x in list(materials.Material.aes_FX)
+        }
 
         for comp, v in self.components.items():
             if type(v) == list:
@@ -172,18 +183,18 @@ class TreasureObject:
         pass
 
     def __getitem__(self, key):
-        keys = list(self.components.keys())
-        comp = self.dictComp.get(keys[key], IndexError(f"{self.__class__.__name__} has no component {key}"))
+        keys = list(self.components)
+        comp = self.dictComp.get(keys[key], None)
         if type(comp) == IndexError:
-            raise comp
+            raise IndexError(f"{self.__class__.__name__} has no component {key}")
         return comp
 
     def __setitem__(self, key, value):
-        keys = list(self.components.keys())
+        keys = list(self.components)
         self.dictComp[keys[key]] = value
 
     def __delitem__(self, key):
-        keys = list(self.components.keys())
-        del self.dictComp[keys[key]]
-
-
+        keys = list(self.components)
+        comp = self.dictComp.get(keys[key], None)
+        if comp:
+            del self.dictComp[keys[key]]
