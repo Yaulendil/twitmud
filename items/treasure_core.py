@@ -1,9 +1,6 @@
 from numpy import random as npr
 
-from grammar import sequence_words, get_a, form_out
-
 # Traits NOT to list (normally) in *.describe()
-NoDescribe = ["Material"]
 DEBUG = False
 
 
@@ -72,7 +69,6 @@ class TreasureObject:
     #     - a LIST containing between INT1 and INT2, inclusive, elements from LIST1
     traits = {}
     # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given trait
-    # TODO: Dict of Adjectives to be placed immediately before the name and not describe()d; Material of weapon, color of liquid, etc
     components = {}
     # COMPONENTS: Sub-objects that make up this object; Should be class name
     additions = {}
@@ -129,16 +125,6 @@ class TreasureObject:
             self.dictComp[comp] = c
         shuffle(self)
 
-    # @property
-    # def material(self):
-    #     try:
-    #         material = self.dictTrait["Material"]
-    #         while type(material) in [tuple, list, dict]:
-    #             material = material[0]
-    #     except:
-    #         material = materials.Material
-    #     return material
-
     def weight(self):
         w = 0
         try:
@@ -148,92 +134,6 @@ class TreasureObject:
         for k, v in self.dictComp.items():
             w += v.weight()
         return w
-
-    def get_adj(self, other=None):
-        adjs = []
-        targ = other or self
-
-        if targ.material:
-            for k, v in targ.material.dmg_FX.items():
-                desc = [""] + v
-                thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
-                adj = ""
-                for i in range(len(desc)):
-                    if targ.dmg[k] > thresholds[i]:
-                        adj = desc[i]
-                adjs.append(adj)
-
-            for k, v in targ.material.aes_FX.items():
-                desc = [""] + v
-                thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
-                adj = ""
-                for i in range(len(desc)):
-                    if targ.aes[k] > thresholds[i]:
-                        adj = desc[i]
-                adjs.append(adj)
-
-        while "" in adjs:
-            adjs.remove("")
-
-        return adjs
-
-    def strself(self, *, use_generic=False, adjectives=None, prefix=""):
-        adjectives = adjectives or self.get_adj() or []
-        name = self.TreasureType
-        name = " ".join(
-            [s.strip() for s in [sequence_words(adjectives), prefix, name] if s]
-        )
-
-        generic = get_a(name.strip(), True)
-        if self.TreasureLabel and not use_generic:
-            n = self.TreasureLabel
-        else:
-            n = generic
-
-        # adj = sequence_words(self.get_adj() + adjectives)
-        # return " ".join([adj, n]).strip()
-        return n.strip()
-
-    def __str__(self):
-        return self.strself()
-
-    def describe(self, solo=True, pad="", full=False):
-        o = ""
-
-        if solo:
-            o += pad + f"'This is {self}.'"
-
-        for a in self.dictAttr:  # Print object attributes (variable number)
-            aa = sequence_words(self.dictAttr[a])
-            if aa != "":
-                o += form_out(f"Its {a.lower()} is {str(aa)}.", pad)
-
-        for a in self.dictTrait:  # Print object traits (one of each)
-            if a not in NoDescribe:
-                o += form_out(
-                    f"Its {a.lower()} is {sequence_words(self.dictTrait[a])}.", pad
-                )
-
-        for a, obj in self.dictComp.items():  # Describe sub-objects
-            # aa = self.dictComp[a]
-            adesc = obj.describe(solo=False, pad=pad + "|", full=full)
-            try:
-                mat = obj.dictTrait["Material"]
-                try:
-                    mat = mat.Adjective
-                except:
-                    mat = mat.__name__
-                # if len(aa.dictTrait) <= 1:
-                if adesc.count("\n") < 1 and not full:
-                    continue
-                o += form_out(
-                    f"Its {a.lower()} is {self.dictComp[a]} of {mat.lower()}.", pad, True
-                )
-            except:
-                o += form_out(f"Its {a.lower()} is {self.dictComp[a]}.", pad, True)
-            o += adesc
-
-        return o
 
     def clone(self, fulldata=True):
         """

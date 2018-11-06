@@ -1,5 +1,4 @@
 import grammar
-from items import treasure_core
 
 
 def title_item(item):
@@ -74,10 +73,7 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
 
         # Print object traits (one of each)
         for a, v in traits.items():
-            if a not in treasure_core.NoDescribe:
-                line_out.append(
-                    f"{rail}- Its {a.lower()} is {grammar.sequence_words(v)}."
-                )
+            line_out.append(f"{rail}- Its {a.lower()} is {grammar.sequence_words(v)}.")
 
         # Print object embellishments (one of each, as passive verbs)
         for a, v in additional.items():

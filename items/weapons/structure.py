@@ -1,9 +1,9 @@
 """
 Weapon Parts that do not contribute damage. Handles, guards, etc.
 """
+
 from items import materials
 from items.treasure_core import TreasureObject
-from grammar import form_out
 
 
 class WPart(TreasureObject):
@@ -24,14 +24,6 @@ class WPart(TreasureObject):
     def damage_rating(self, split=True):
         # Amount of damage contributed by this component
         return [0, 0, 0] if split else 0
-
-    def describe(self, solo=True, pad="", full=False):
-        o = super().describe(solo, pad, full)
-        d = self.damage_rating()
-        dstr = [str(n) for n in d]
-        if sum(d) > 0:
-            o += form_out(f"It contributes {dstr} C/P/S damage.", pad, True)
-        return o
 
 
 class Grip(WPart):

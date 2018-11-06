@@ -1,7 +1,7 @@
 from numpy import add as npadd, round
 
 from . import damage, structure
-from items.treasure_core import TreasureObject, form_out, choose_from
+from items.treasure_core import TreasureObject, choose_from
 
 
 class Weapon(TreasureObject):
@@ -46,40 +46,6 @@ class Weapon(TreasureObject):
         for comp in self.dictComp:
             d = npadd(d, self.dictComp[comp].damage_rating(True))
         return list(d)
-
-    def strself(self, *a, prefix="", **kw):
-        """Take the adjectives from the "core" component"""
-        try:
-            important = self.dictComp[self.damager]
-            kw["prefix"] = " ".join([prefix, important.material.__name__])
-            kw["adjectives"] = important.get_adj()
-        except:
-            pass
-        return super().strself(*a, **kw)
-
-    def describe(self, solo=True, pad="", full=False):
-        o = ""
-        if solo:
-            o += pad + f"'This is {self}.'"
-        d = self.calc_damage()
-        dsum = round(sum(d), 2)
-        o += form_out(
-            "It does "
-            # + "/".join([str(round(i, 2)) for i in d])
-            + str([str(round(i, 2)) for i in d])
-            + " C/P/S damage for "
-            + str(dsum)
-            + " ideal-total.",
-            pad,
-        )
-        wgh = self.weight()
-        spd = self.speed()
-        o += form_out(
-            f">> It has a weight of {str(wgh)} " + f"for a speed of {str(spd)}.", pad
-        )
-        o += form_out(f">> It does {str(round((dsum + spd) / 10, 2))} DPS.", pad)
-        o += super().describe(False, pad, full)
-        return o
 
 
 class Sword(Weapon):
