@@ -1,7 +1,6 @@
 from numpy import random as npr
 
 from grammar import sequence_words, get_a, form_out
-from . import materials
 
 # Traits NOT to list (normally) in *.describe()
 NoDescribe = ["Material"]
@@ -17,9 +16,13 @@ def choose_from(choices: list, q=1, probability: list = None):
     """
     Choices will be a list. Each item of the list may also be a list or a tuple.
         If an item of Choices is a tuple, it will be a list of subchoices and a list of probabilities.
-    Probability will be a list of numbers.
+    Probability will be a list of numbers and overrides a probability list packed with the choices.
     Choose Q objects from Choices and return them.
     """
+    if type(choices) not in [tuple, list]:
+        # If Choices is a single item, return it immediately.
+        return choices
+
     prob = None
     if type(choices) == tuple:
         (choices, prob) = choices
@@ -74,6 +77,8 @@ class TreasureObject:
     # COMPONENTS: Sub-objects that make up this object; Should be class name
     additions = {}
     # ADDITIONS: Extra sub-objects added on; Gemstones, precious metal inlay, etc
+    materials = []
+    # MATERIALS: Possibilities for object materials; May be left blank
 
     TreasureType = "Generic Treasure"
     BaseType = "item"
@@ -101,14 +106,18 @@ class TreasureObject:
         self.dictTrait = {}
         self.dictComp = {}
         self.dictAdd = {}
-        self.parent = None
+        self.dictAdj = {}
+        # self.parent = None
 
         self.Value = 0
         self.TreasureLabel = None
+        self.material = choose_from(self.materials)[0] if self.materials else None
 
         self.hp = 100
-        self.dmg = {x: npr.randint(0, 30) for x in list(self.dmg_FX)}
-        self.aes = {x: npr.randint(0, 30) for x in list(self.aes_FX)}
+        self.dmg = {x: 0 for x in list(self.dmg_FX)}
+        self.aes = {x: 0 for x in list(self.aes_FX)}
+        # self.dmg = {x: npr.randint(0, 90) for x in list(self.dmg_FX)}
+        # self.aes = {x: npr.randint(0, 90) for x in list(self.aes_FX)}
 
         for comp, v in self.components.items():
             if type(v) == list:
@@ -119,18 +128,18 @@ class TreasureObject:
                 choice = v
             c = choice(*args, **kwargs)
             self.dictComp[comp] = c
-            c.parent = self
+            # c.parent = self
         shuffle(self)
 
-    @property
-    def material(self):
-        try:
-            material = self.dictTrait["Material"]
-            while type(material) in [tuple, list, dict]:
-                material = material[0]
-        except:
-            material = materials.Material
-        return material
+    # @property
+    # def material(self):
+    #     try:
+    #         material = self.dictTrait["Material"]
+    #         while type(material) in [tuple, list, dict]:
+    #             material = material[0]
+    #     except:
+    #         material = materials.Material
+    #     return material
 
     def weight(self):
         w = 0
@@ -146,23 +155,24 @@ class TreasureObject:
         adjs = []
         targ = other or self
 
-        for k, v in targ.material.dmg_FX.items():
-            desc = [""] + v
-            thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
-            adj = ""
-            for i in range(len(desc)):
-                if targ.dmg[k] > thresholds[i]:
-                    adj = desc[i]
-            adjs.append(adj)
+        if targ.material:
+            for k, v in targ.material.dmg_FX.items():
+                desc = [""] + v
+                thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
+                adj = ""
+                for i in range(len(desc)):
+                    if targ.dmg[k] > thresholds[i]:
+                        adj = desc[i]
+                adjs.append(adj)
 
-        for k, v in targ.material.aes_FX.items():
-            desc = [""] + v
-            thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
-            adj = ""
-            for i in range(len(desc)):
-                if targ.aes[k] > thresholds[i]:
-                    adj = desc[i]
-            adjs.append(adj)
+            for k, v in targ.material.aes_FX.items():
+                desc = [""] + v
+                thresholds = [int((100 / len(desc)) * i) for i in range(len(desc))]
+                adj = ""
+                for i in range(len(desc)):
+                    if targ.aes[k] > thresholds[i]:
+                        adj = desc[i]
+                adjs.append(adj)
 
         while "" in adjs:
             adjs.remove("")

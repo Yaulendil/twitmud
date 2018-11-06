@@ -8,7 +8,8 @@ from grammar import form_out
 
 class WPart(TreasureObject):
     size = 10
-    traits = {"Material": materials.Metal.decor + materials.Metal.structure}
+    # traits = {"Material": materials.Metal.decor + materials.Metal.structure}
+    materials = materials.Metal.decor + materials.Metal.structure
     TreasureType = "Tool Component"
     base_durability = 5
 
