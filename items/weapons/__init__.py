@@ -13,6 +13,10 @@ class Weapon(TreasureObject):
         # WEAPONS deal damage determined by their components
         super().__init__(self, *args, **kwargs)
         self.damage = self.calc_damage()
+        try:
+            self.material = self.dictComp[self.damager].material
+        except:
+            pass
 
     @property
     def reach(self):

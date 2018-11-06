@@ -106,8 +106,7 @@ class TreasureObject:
         self.dictTrait = {}
         self.dictComp = {}
         self.dictAdd = {}
-        self.dictAdj = {}
-        # self.parent = None
+        self.adjectives = []
 
         self.Value = 0
         self.TreasureLabel = None
@@ -128,7 +127,6 @@ class TreasureObject:
                 choice = v
             c = choice(*args, **kwargs)
             self.dictComp[comp] = c
-            # c.parent = self
         shuffle(self)
 
     # @property
