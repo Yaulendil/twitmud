@@ -36,19 +36,22 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
         dsum = round(sum(d), 2)
         wgh = item.weight()
         spd = item.speed()
-        line_out.append(f"{rail}> It does {str([str(round(i, 2)) for i in d])} C/P/S damage for {str(dsum)} ideal-total.")
-        line_out.append(f"{rail}> It has a weight of {str(wgh)} for a speed of {str(spd)}.")
-        line_out.append(f"{rail}> It does {str(round((dsum + spd) / 10, 2))} DPS.")
+        line_out += [
+            f"{rail}> It does {str([str(round(i, 2)) for i in d])} C/P/S damage for {str(dsum)} ideal-total.",
+            f"{rail}> It has a weight of {str(wgh)} for a speed of {str(spd)}.",
+            f"{rail}> It does {str(round((dsum + spd) / 10, 2))} DPS.",
+        ]
     except AttributeError:
         pass
 
     try:
         # See if it is part of a weapon object
-
         d = item.damage_rating()
         dstr = [str(n) for n in d]
         if sum(d) > 0:
-            line_out.append(f"{rail}+ It contributes {dstr} C/P/S damage to its parent.")
+            line_out.append(
+                f"{rail}+ It contributes {dstr} C/P/S damage to its parent."
+            )
     except AttributeError:
         pass
 
@@ -72,7 +75,9 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
         # Print object traits (one of each)
         for a, v in traits.items():
             if a not in treasure_core.NoDescribe:
-                line_out.append(f"{rail}- Its {a.lower()} is {grammar.sequence_words(v)}.")
+                line_out.append(
+                    f"{rail}- Its {a.lower()} is {grammar.sequence_words(v)}."
+                )
 
         # Print object embellishments (one of each, as passive verbs)
         for a, v in additional.items():
@@ -80,10 +85,14 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
 
     if recursive:
         for i, v in enumerate(components.items()):
-            prefix_first, prefix_rest = ("\\_", "  ") if i == len(components) - 1 else ("|_", "| ")
+            prefix_first, prefix_rest = (
+                ("\\_", "  ") if i == len(components) - 1 else ("|_", "| ")
+            )
             ret = item_description(v[1], top=False)
 
-            line_return = [prefix_first + "[{}] Its {} is {}.".format(i, v[0].lower(), ret.pop(0))]
+            line_return = [
+                prefix_first + "[{}] Its {} is {}.".format(i, v[0].lower(), ret.pop(0))
+            ]
             line_return += [prefix_rest + line for line in ret]
             line_out += line_return
 

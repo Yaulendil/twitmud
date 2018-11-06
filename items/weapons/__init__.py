@@ -74,8 +74,9 @@ class Weapon(TreasureObject):
         )
         wgh = self.weight()
         spd = self.speed()
-        o += form_out(f">> It has a weight of {str(wgh)} "
-                      + f"for a speed of {str(spd)}.", pad)
+        o += form_out(
+            f">> It has a weight of {str(wgh)} " + f"for a speed of {str(spd)}.", pad
+        )
         o += form_out(f">> It does {str(round((dsum + spd) / 10, 2))} DPS.", pad)
         o += super().describe(False, pad, full)
         return o
@@ -83,6 +84,7 @@ class Weapon(TreasureObject):
 
 class Sword(Weapon):
     """A long blade with a handle on one end; Typically swung to slash"""
+
     components = {
         "Blade": damage.Blade,
         "Pommel": damage.Sphere,
