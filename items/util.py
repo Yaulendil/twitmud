@@ -1,5 +1,12 @@
 import grammar
 
+# Characters to use for the tree/rail.
+# LINE = [" ", "|", "\\", "|", "_"]
+# LINE = [" ", "║", "╙", "╟", "╼"]
+# LINE = [" ", "│", "╘", "╞", "═"]
+LINE = [" ", "│", "╰", "├", "╼"]
+# In order: Empty, rail without entry, final entry, rail with entry, entry
+
 
 def title_item(item):
     given_name = item.TreasureLabel
@@ -20,9 +27,9 @@ def title_item(item):
         return grammar.get_a(name, include=True)
 
 
-def item_description(item, *, top=True, minimal=False, recursive=True):
+def item_description(item, *, top=True, minimal=False, recursive=True, lineset=LINE):
     components = item.dictComp
-    rail = "|" if components and recursive else " "
+    rail = lineset[1] if components and recursive else lineset[0]
     line_out = [title_item(item)]
 
     if top:
@@ -80,9 +87,9 @@ def item_description(item, *, top=True, minimal=False, recursive=True):
 
     if recursive:
         for i, v in enumerate(components.items()):
-            line_out.append("|")
+            line_out.append(lineset[1])
             prefix_first, prefix_rest = (
-                ("\\_", "  ") if i == len(components) - 1 else ("|_", "| ")
+                (lineset[2] + lineset[4], lineset[0]*2) if i == len(components) - 1 else (lineset[3] + lineset[4], lineset[1] + lineset[0])
             )
             ret = item_description(
                 v[1], top=False, minimal=minimal, recursive=recursive
