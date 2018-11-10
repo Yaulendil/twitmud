@@ -349,7 +349,43 @@ class Gemstone(Material):
     Hardness = 300
     Toughness = 10
     Flexibility = 20
-    __adj__ = "Crystalline"
+    __adj__ = "Gem"
+
+
+class Ruby(Gemstone):
+    Value = 300
+
+
+class Topaz(Gemstone):
+    Value = 175
+
+
+class Emerald(Gemstone):
+    Value = 250
+
+
+class Turquoise(Gemstone):
+    Value = 200
+
+
+class Sapphire(Gemstone):
+    Value = 275
+
+
+class Amethyst(Gemstone):
+    Value = 225
+
+
+class Onyx(Gemstone):
+    Value = 600
+
+
+class Diamond(Gemstone):
+    Value = 500
+
+
+class Quartz(Gemstone):
+    Value = 150
 
 
 Metal.weapons = [[Iron, Copper, Bronze], [Steel], [Silver, Gold], [Mithril, Adamantium]]
@@ -362,3 +398,5 @@ Wood.structure = [Oak, Spruce, Maple]
 Textile.all = [Leather, Silk, Cotton, Canvas, Wool]
 Textile.common = [Leather, Canvas]
 Textile.fine = [Silk, Wool]
+
+Gemstone.all = [Ruby, Topaz, Emerald, Turquoise, Sapphire, Amethyst, Onyx, Diamond, Quartz]

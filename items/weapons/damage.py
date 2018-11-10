@@ -3,7 +3,7 @@ Weapon Parts that contribute damage to the weapon. Blades, heads, points, spikes
 """
 from numpy import round
 
-from items import materials
+from items import materials, decor
 
 # from treasure_core import TreasureObject, form_out
 from .structure import WPart
@@ -69,6 +69,7 @@ class Damager(WPart):
 class Blade(Damager):
     """A long flat plane with sharp edges"""
 
+    additions = [([None, decor.MetalInlay], [5, 1])]
     size = 8
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 1, "Hardness": 0.5, "Flexibility": -0.2},
@@ -131,6 +132,7 @@ class BladeCurved(Blade):
 class HeadClub(Damager):
     """A smooth heavy block or cylinder"""
 
+    additions = [([None, decor.GemEncrust, decor.MetalInlay], [10, 1, 5])]
     size = 5
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.4, "Hardness": 0.1, "Flexibility": 0.2}
@@ -143,6 +145,7 @@ class HeadClub(Damager):
 class Sphere(HeadClub):
     """A basic and smooth orb"""
 
+    additions = [([None, decor.GemEncrust], [10, 1])]
     size = 2
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 1.4, "Hardness": 0.2, "Flexibility": 0}
@@ -178,6 +181,7 @@ class HeadStar(HeadClub):
 class HeadAxe(Damager):
     """A heavy blade that uses momentum to cleave"""
 
+    additions = [([None, decor.MetalInlay], [5, 1])]
     size = 7
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 0.8, "Hardness": 0.1, "Flexibility": -0.2},

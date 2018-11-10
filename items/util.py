@@ -64,7 +64,7 @@ def item_description(item, *, top=True, minimal=False, recursive=True, lineset=L
         # If the function was not told to be minimal, return a few more lines of flavor text
         traits = item.dictTrait
         attributes = item.dictAttr
-        additional = item.dictAdd
+        additional = item.decor
         adjectives = item.get_adj()
 
         # Print object adjectives as a single line
@@ -82,7 +82,7 @@ def item_description(item, *, top=True, minimal=False, recursive=True, lineset=L
             line_out.append(f"{rail}- Its {a.lower()} is {grammar.sequence_words(v)}.")
 
         # Print object embellishments (one of each, as passive verbs)
-        for a, v in additional.items():
+        for v in additional:
             line_out.append(f"{rail}* It {v.as_pverb()}.")
 
     if recursive:

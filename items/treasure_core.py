@@ -17,6 +17,12 @@ def shuffle(obj, feat=None, r=False):
         if trait == feat or not feat:
             selected = choose_from(poss)[0]
             obj.dictTrait[trait] = selected
+    for dec in obj.additions:
+        selected = choose_from(dec)[0]
+        if selected and (
+            obj.material in selected.material_restrict or not selected.material_restrict
+        ):
+            obj.decor.append(selected(obj.material))
     if r:
         for comp, obj2 in obj.dictComp.items():
             shuffle(obj2, feat, r)
@@ -32,7 +38,7 @@ class TreasureObject:
     # TRAITS: Defining modifiers, possibly with effects; Exactly one of a given traitz
     components = {}
     # COMPONENTS: Sub-objects that make up this object; Should be class name
-    additions = {}
+    additions = []
     # ADDITIONS: Extra sub-objects added on; Gemstones, precious metal inlay, etc
     materials = []
     # MATERIALS: Possibilities for object materials; May be left blank
@@ -45,8 +51,8 @@ class TreasureObject:
         self.dictAttr = {}
         self.dictTrait = {}
         self.dictComp = {}
-        self.dictAdd = {}
         self.adjectives = []
+        self.decor = []
 
         try:
             self.material = (
