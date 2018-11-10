@@ -44,3 +44,8 @@ class Creature:
         self.skill_walk = 1
         self.skill_swim = 1
         self.skill_fly = 1
+
+    def speed(self, stype):
+        speed = getattr(self, "speed_" + stype, 0)
+        skill = getattr(self, "skill_" + stype, 0)
+        return speed * skill
