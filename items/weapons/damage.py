@@ -79,7 +79,7 @@ class Blade(Damager):
         "  ███  ",
     ]
 
-    additions = [([None, decor.MetalInlay], [5, 1])]
+    additions = [([None, decor.MetalPlating, decor.MetalInlay], [5, 3, 1])]
     size = 8
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 1, "Hardness": 0.5, "Flexibility": -0.2},
@@ -231,8 +231,8 @@ class Spike(Damager):
         "  ▐█▌  ",
     ]
 
-    additions = [([None, decor.MetalInlay], [5, 1])]
-    size = 8
+    additions = [([None, decor.MetalPlating, decor.MetalInlay], [5, 3, 1])]
+    size = 4
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 1, "Hardness": 0.5, "Flexibility": -0.2},
         "Pierce": {"Density": 1, "Hardness": 2, "Flexibility": 1},
@@ -258,7 +258,7 @@ class HeadClub(Damager):
         "  ███  ",
     ]
 
-    additions = [([None, decor.GemEncrust, decor.MetalInlay], [10, 1, 5])]
+    additions = [([None, decor.GemEncrust, decor.MetalPlating, decor.MetalInlay], [10, 1, 3, 5])]
     size = 5
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.4, "Hardness": 0.1, "Flexibility": 0.2}

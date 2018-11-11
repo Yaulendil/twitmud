@@ -35,6 +35,12 @@ class MetalInlay(Decor):
     materials = materials.Metal.decor
 
 
+class MetalPlating(Decor):
+    value_add = 2.5
+    __adj__ = "Plated"
+    materials = materials.Metal.decor
+
+
 class GemEncrust(Decor):
     value_add = 5
     __adj__ = "Encrusted"
