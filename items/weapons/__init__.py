@@ -75,6 +75,26 @@ class Greatsword(Sword):
     TreasureType = "Greatsword"
 
 
+class Falchion(Sword):
+    components = {
+        "Blade": damage.BladeCurved,
+        "Guard": structure.Roundguard,
+        "Handle": structure.Handle,
+        "Pommel": damage.Sphere,
+    }
+    TreasureType = "Falchion"
+
+
+class GreatswordCurved(Sword):
+    components = {
+        "Blade": damage.BladeCurvedBig,
+        "Guard": structure.Crossguard,
+        "Handle": structure.HandleLong,
+        "Pommel": damage.Sphere,
+    }
+    TreasureType = "Curved Greatsword"
+
+
 class Dagger(Sword):
     components = {
         "Blade": damage.BladeSmall,
@@ -85,14 +105,24 @@ class Dagger(Sword):
     TreasureType = "Dagger"
 
 
-class Falchion(Sword):
+class DaggerCurved(Sword):
     components = {
-        "Blade": damage.BladeCurved,
+        "Blade": damage.BladeCurvedSmall,
         "Guard": structure.Roundguard,
         "Handle": structure.Handle,
         "Pommel": damage.Sphere,
     }
-    TreasureType = "Falchion"
+    TreasureType = "Curved Dagger"
+
+
+class Stiletto(Sword):
+    components = {
+        "Blade": damage.Spike,
+        # "Guard": structure.Roundguard,
+        "Handle": structure.Handle,
+        "Pommel": damage.Sphere,
+    }
+    TreasureType = "Stiletto"
 
 
 class Glaive(Sword):
@@ -172,7 +202,8 @@ class Pike(Weapon):
     damager = "Point"
 
 
-swords = [Sword, Falchion, Greatsword, Dagger]
+swords = [Sword, Falchion, Greatsword, GreatswordCurved]
+knives = [Dagger, DaggerCurved, Stiletto]
 bludgeons = [Club, Mace, Star]
 cleavers = [Axe]
 polearms = [Glaive, MaceCav, Halberd, Pike]
@@ -181,7 +212,7 @@ weapons = [swords, bludgeons, cleavers, polearms]
 
 
 def random_weapon():
-    return treasure_core.choose_from(weapons)[0]
+    return treasure_core.choose_from((weapons, [len(x) for x in weapons]))[0]
 
 
 def test_weapon(minimal=False, mat=None, norecurse=False, images=True, text=True):

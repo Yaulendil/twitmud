@@ -186,9 +186,9 @@ class Bronze(Metal):
     Value = 80
     Rarity = 120
     Density = 115
-    Hardness = 100
+    Hardness = 95
     Toughness = 90
-    Flexibility = 100
+    Flexibility = 120
     __adj__ = "Brazen"
 
 
@@ -196,9 +196,9 @@ class Copper(Metal):
     Value = 70
     Rarity = 80
     Density = 110
-    Hardness = 100
+    Hardness = 80
     Toughness = 75
-    Flexibility = 100
+    Flexibility = 130
     __adj__ = "Copper"
 
 

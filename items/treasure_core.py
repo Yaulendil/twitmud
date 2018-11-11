@@ -75,7 +75,8 @@ class TreasureObject:
             for x in list(materials.Material.dmg_FX)
         }
         self.aes = {
-            x: choose_from(dmg, probability=chance)[0]
+            x: 0
+            # x: choose_from(dmg, probability=chance)[0]
             for x in list(materials.Material.aes_FX)
         }
 

@@ -6,7 +6,7 @@ def normalize(in_):
     return [float(i) / s for i in in_]
 
 
-def choose_from(choices: list, q=1, probability: list = None):
+def choose_from(choices, q=1, probability: list = None):
     """
     Choices will be a list. Each item of the list may also be a list or a tuple.
         If an item of Choices is a tuple, it will be a list of subchoices and a list of probabilities.

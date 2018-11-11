@@ -76,6 +76,7 @@ class Blade(Damager):
         "  ███  ",
         "  ███  ",
         "  ███  ",
+        "  ███  ",
     ]
 
     additions = [([None, decor.MetalInlay], [5, 1])]
@@ -133,7 +134,6 @@ class BladeSmall(Blade):
         "  ▗█▖  ",
         "  ▟█▙  ",
         "  ███  ",
-        "  ███  ",
     ]
 
     size = 5
@@ -160,7 +160,7 @@ class BladeCurved(Blade):
         "  ███  ",
     ]
 
-    size = 8
+    size = 7
     base_damage = 11
     base_speed = 14
 
@@ -171,28 +171,77 @@ class BladeCurved(Blade):
     TreasureType = "curved blade"
 
 
+class BladeCurvedBig(Blade):
+    """A short flat plane with sharp edges"""
+
+    image = [
+        "▃▄▂    ",
+        " ▜█▙   ",
+        " ▐██▌  ",
+        " ▐███  ",
+        " ▝███  ",
+        "  ███  ",
+        " ▂███  ",
+        "  ███  ",
+        " ▂███  ",
+        "  ███  ",
+        "  ███  ",
+        "  ███  ",
+    ]
+
+    size = 14
+    base_damage = 12
+    base_speed = 6
+
+    Effectiveness = 4
+    DamageTypesGood = [2]
+    DamageTypesBad = [1]
+
+    TreasureType = "great curved blade"
+
+
+class BladeCurvedSmall(Blade):
+    """A short flat plane with sharp edges"""
+
+    image = [
+        "  ▄    ",
+        "  █▙   ",
+        "  ██▌  ",
+        "  ███  ",
+    ]
+
+    size = 5
+    base_damage = 8
+    base_speed = 14
+
+    Effectiveness = 4
+    DamageTypesGood = [1, 2]
+    DamageTypesBad = [0]
+
+    TreasureType = "small curved blade"
+
+
 class Spike(Damager):
     """A cone with sharp edges, made for stabbing"""
 
     image = [
         "   ▂   ",
-        "  ▗█▖  ",
-        "  ▟█▙  ",
-        " ▗███▖ ",
-        "  ███  ",
+        "   █   ",
+        "  ▐█▌  ",
+        "  ▐█▌  ",
     ]
 
     additions = [([None, decor.MetalInlay], [5, 1])]
     size = 8
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 1, "Hardness": 0.5, "Flexibility": -0.2},
-        "Pierce": {"Density": 0.6, "Hardness": 2, "Flexibility": 1},
+        "Pierce": {"Density": 1, "Hardness": 2, "Flexibility": 1},
         "Slice": {"Density": 0.2, "Hardness": 0.6, "Flexibility": 0.7},
     }
     base_damage = 8
-    base_speed = 11
+    base_speed = 14
 
-    Effectiveness = 3
+    Effectiveness = 6
     DamageTypesGood = [1]
     DamageTypesBad = [0, 2]
 
@@ -223,7 +272,7 @@ class Sphere(HeadClub):
     """A basic and smooth orb"""
 
     image = [
-        "   █   ",
+        "   ▀   ",
     ]
 
     additions = [([None, decor.GemEncrust], [10, 1])]
@@ -258,10 +307,10 @@ class HeadStar(HeadClub):
     """A heavy mass, with spikes attached"""
 
     image = [
-        "  ▙▄▟  ",
-        " ▙███▟ ",
-        " ▛███▜ ",
-        "  ▛█▜  ",
+        "   ╻   ",
+        "  ▚█▞  ",
+        " ╺███╸ ",
+        "  ▞█▚  ",
     ]
 
     size = 5
