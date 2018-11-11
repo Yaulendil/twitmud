@@ -43,7 +43,7 @@ class GemEncrust(Decor):
 
 class Carved(Decor):
     value_add = 1.5
-    __adj__ = "Finely Carved"
+    __adj__ = "Intricately Carved"
     material_restrict = materials.Wood.all
 
 
@@ -64,9 +64,8 @@ class Color(Decor):
         ["green", "emerald"],
         ["blue", "cyan", "indigo", "sky", "sapphire"],
         ["violet", "purple", "fuschia", "magenta"],
-        ["white", "ivory", "cream"],
-        ["black", "ebony", "pitch"],
-        ["brown", "chocolate"],
+        ["white", "ivory", "silver"],
+        ["black", "ebony"],
     ]
 
     def __init__(self, *a):
@@ -74,7 +73,12 @@ class Color(Decor):
         self.color = choose_from(self.colors)[0]
 
     def as_pverb(self):
+        verb = "painted"
         if self.applied_to in materials.Textile.all:
-            return "is dyed " + self.color
-        else:
-            return "is painted " + self.color
+            if self.color in ["white", "ivory"]:
+                verb = "bleached"
+            else:
+                verb = "dyed"
+        elif self.applied_to in materials.Wood.all:
+            verb = "stained"
+        return "is {} {}".format(verb, self.color)
