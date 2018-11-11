@@ -10,6 +10,23 @@ LINE = [" ", "│", "╰", "├", "╼"]
 Colorful = False
 
 
+def longest_in_list(_list):
+    longest = 0
+    for x in _list:
+        if len(x) > longest:
+            longest = len(x)
+    return longest
+
+
+def combine_images(imgs):
+    longest = longest_in_list(imgs)
+    for img in imgs:
+        while len(img) < longest:
+            img.append(" " * longest_in_list(img))
+    img_composite = [" │ ".join([p[i] for p in imgs]) for i in range(longest)]
+    return "\n".join(img_composite)
+
+
 def title_item(item):
     given_name = item.TreasureLabel
     core_name = item.TreasureType.lower()
@@ -37,6 +54,7 @@ def item_image(item):
 
 
 def item_description(item, *, top=True, minimal=False, recursive=True, lineset=LINE):
+    """Return a list of strings, which, when join()ed by '\n's, display hierarchy"""
     components = item.dictComp
     rail = lineset[1] if components and recursive else lineset[0]
     line_out = [title_item(item)]
@@ -98,7 +116,9 @@ def item_description(item, *, top=True, minimal=False, recursive=True, lineset=L
         for i, v in enumerate(components.items()):
             line_out.append(lineset[1])
             prefix_first, prefix_rest = (
-                (lineset[2] + lineset[4], lineset[0]*2) if i == len(components) - 1 else (lineset[3] + lineset[4], lineset[1] + lineset[0])
+                (lineset[2] + lineset[4], lineset[0] * 2)
+                if i == len(components) - 1
+                else (lineset[3] + lineset[4], lineset[1] + lineset[0])
             )
             ret = item_description(
                 v[1], top=False, minimal=minimal, recursive=recursive

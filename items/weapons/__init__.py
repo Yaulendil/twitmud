@@ -174,9 +174,15 @@ def random_weapon():
     return treasure_core.choose_from(weapons)[0]
 
 
-def test_weapon(minimal=False, mat=None, norecurse=False, images=True):
+def test_weapon(minimal=False, mat=None, norecurse=False, images=True, text=True):
+    imgs = []
     for a in weapons:
         for b in a:
             bb = b(override_material=mat)
-            util.describe_item(bb, minimal=minimal, norecurse=norecurse, images=images)
-            # bb.save("weapons/" + bb.__class__.__name__.lower() + ".json")
+            if text:
+                util.describe_item(bb, minimal=minimal, norecurse=norecurse, images=images)
+            else:
+                imgs.append(util.item_image(bb))
+
+    if imgs and not text:
+        print(util.combine_images(imgs))
