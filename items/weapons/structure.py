@@ -7,6 +7,7 @@ from items.treasure_core import TreasureObject
 
 
 class WPart(TreasureObject):
+    image = []
     size = 10
     # traits = {"Material": materials.Metal.decor + materials.Metal.structure}
     materials = materials.Metal.decor + materials.Metal.structure
@@ -36,6 +37,11 @@ class GripWide(Grip):
 
 
 class Handle(WPart):
+    image = [
+        "   ║   ",
+        "   ║   ",
+    ]
+
     additions = [([None, decor.Carved], [5, 1]), [None, decor.Color]]
     size = 3
     materials = materials.Metal.structure + materials.Wood.structure
@@ -44,12 +50,34 @@ class Handle(WPart):
 
 
 class HandleLong(Handle):
+    image = [
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+    ]
+
     size = 8
     components = {"Grip": [None, GripWide]}
     TreasureType = "long handle"
 
 
 class HandleLonger(Handle):
+    image = [
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+        "   ║   ",
+    ]
+
     size = 14
     components = {
         "Upper Grip": [None, Grip, GripWide],
@@ -59,18 +87,31 @@ class HandleLonger(Handle):
 
 
 class Crossguard(WPart):
+    image = [
+        "▜█████▛",
+    ]
+
     size = 4
     additions = [([None, decor.GemEncrust, decor.MetalInlay], [10, 1, 5])]
     TreasureType = "crossguard"
 
 
 class Roundguard(WPart):
+    image = [
+        " ▟███▙ ",
+    ]
+
     size = 2
     additions = [([None, decor.GemEncrust, decor.MetalInlay], [10, 1, 5])]
     TreasureType = "round guard"
 
 
 class Basket(WPart):
+    image = [
+        " ▟███▙ ",
+        " █████ ",
+    ]
+
     size = 3
     additions = [([None, decor.GemEncrust, decor.MetalInlay], [10, 1, 5])]
     TreasureType = "basket guard"

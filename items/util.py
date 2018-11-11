@@ -7,6 +7,8 @@ import grammar
 LINE = [" ", "│", "╰", "├", "╼"]
 # In order: Empty, rail without entry, final entry, rail with entry, entry
 
+Colorful = False
+
 
 def title_item(item):
     given_name = item.TreasureLabel
@@ -25,6 +27,13 @@ def title_item(item):
         return given_name + ", the " + name
     else:
         return grammar.get_a(name, include=True)
+
+
+def item_image(item):
+    line_out = []
+    for v in item.dictComp.values():
+        line_out += getattr(v, "image", [])
+    return line_out
 
 
 def item_description(item, *, top=True, minimal=False, recursive=True, lineset=LINE):
@@ -104,7 +113,19 @@ def item_description(item, *, top=True, minimal=False, recursive=True, lineset=L
     return line_out
 
 
-def describe_item(item, minimal=False, norecurse=False):
+def describe_item(item, minimal=False, norecurse=False, images=False):
     line_in = item_description(item, minimal=minimal, recursive=not norecurse)
-    line_out = "\n".join(line_in)
+    if images:
+        img_in = item_image(item)
+
+        while len(img_in) < len(line_in):
+            img_in.append("       ")
+        while len(line_in) < len(img_in):
+            line_in.append("")
+
+        all_in = [" ".join(["", img_in[i], line_in[i]]) for i in range(len(img_in))]
+    else:
+        all_in = line_in
+
+    line_out = "\n".join(all_in)
     print("\n" + line_out + "\n")

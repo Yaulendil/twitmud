@@ -11,8 +11,7 @@ from .structure import WPart
 
 class Damager(WPart):
     size = 10
-    type_damage = {  # Coefficients of each damage type done by this component
-    }
+    type_damage = {}  # Coefficients of each damage type done by this component
 
     # How much damage does it do? (This will be greatly multiplied later)
     base_damage = 10
@@ -50,8 +49,8 @@ class Damager(WPart):
                     dmore = getattr(self.material, damage_stat) * coeff * self.size
                     # print(str(dmore), "from", getattr(self.material, damage_stat), damage_stat, "(" + self.material.__name__ + ")")
                     damage += dmore
-                damage = damage * (1 - self.dmg["phys"]/1000)
-                d.append(damage/100)
+                damage = damage * (1 - self.dmg["phys"] / 1000)
+                d.append(damage / 100)
 
             for i in range(len(d)):
                 if i in self.DamageTypesGood:
@@ -68,6 +67,16 @@ class Damager(WPart):
 
 class Blade(Damager):
     """A long flat plane with sharp edges"""
+
+    image = [
+        "   ▄   ",
+        "  ▟█▙  ",
+        "  ███  ",
+        "  ███  ",
+        "  ███  ",
+        "  ███  ",
+        "  ███  ",
+    ]
 
     additions = [([None, decor.MetalInlay], [5, 1])]
     size = 8
@@ -90,6 +99,21 @@ class Blade(Damager):
 class BladeBig(Blade):
     """A very long flat plane with sharp edges"""
 
+    image = [
+        "   █   ",
+        "  ▗█▖  ",
+        "  ▐█▌  ",
+        "  ▐█▌  ",
+        "  ▟█▙  ",
+        "  ███  ",
+        "  ███  ",
+        "  ███  ",
+        " ▂███▂ ",
+        "  ███  ",
+        "  ███  ",
+        "  ███  ",
+    ]
+
     size = 14
     base_damage = 12
     base_speed = 6
@@ -103,6 +127,14 @@ class BladeBig(Blade):
 
 class BladeSmall(Blade):
     """A short flat plane with sharp edges"""
+
+    image = [
+        "   ▂   ",
+        "  ▗█▖  ",
+        "  ▟█▙  ",
+        "  ███  ",
+        "  ███  ",
+    ]
 
     size = 5
     base_damage = 8
@@ -118,6 +150,16 @@ class BladeSmall(Blade):
 class BladeCurved(Blade):
     """A short flat plane with sharp edges"""
 
+    image = [
+        "  ▄    ",
+        "  █▙   ",
+        "  ██▌  ",
+        "  ███  ",
+        "  ███  ",
+        "  ███  ",
+        "  ███  ",
+    ]
+
     size = 8
     base_damage = 11
     base_speed = 14
@@ -132,6 +174,13 @@ class BladeCurved(Blade):
 class HeadClub(Damager):
     """A smooth heavy block or cylinder"""
 
+    image = [
+        "   ▄   ",
+        "  ███  ",
+        " ▐███▌ ",
+        "  ███  ",
+    ]
+
     additions = [([None, decor.GemEncrust, decor.MetalInlay], [10, 1, 5])]
     size = 5
     type_damage = {  # Coefficients of each damage type done by this component
@@ -145,6 +194,10 @@ class HeadClub(Damager):
 class Sphere(HeadClub):
     """A basic and smooth orb"""
 
+    image = [
+        "   █   ",
+    ]
+
     additions = [([None, decor.GemEncrust], [10, 1])]
     size = 2
     type_damage = {  # Coefficients of each damage type done by this component
@@ -156,6 +209,13 @@ class Sphere(HeadClub):
 
 class HeadMace(HeadClub):
     """A heavy cylinder, with flanges or blades attached"""
+
+    image = [
+        "   ▄   ",
+        " ╞███╡ ",
+        " ╞███╡ ",
+        " ╞███╡ ",
+    ]
 
     size = 5
     type_damage = {  # Coefficients of each damage type done by this component
@@ -169,6 +229,13 @@ class HeadMace(HeadClub):
 class HeadStar(HeadClub):
     """A heavy mass, with spikes attached"""
 
+    image = [
+        "  ▙▄▟  ",
+        " ▙███▟ ",
+        " ▛███▜ ",
+        "  ▛█▜  ",
+    ]
+
     size = 5
     type_damage = {  # Coefficients of each damage type done by this component
         "Crush": {"Density": 2.1, "Hardness": 0.1, "Flexibility": 0.2},
@@ -180,6 +247,13 @@ class HeadStar(HeadClub):
 
 class HeadAxe(Damager):
     """A heavy blade that uses momentum to cleave"""
+
+    image = [
+        "█▙ ▄   ",
+        "█████▙ ",
+        "█████▛ ",
+        "█▛ █   ",
+    ]
 
     additions = [([None, decor.MetalInlay], [5, 1])]
     size = 7

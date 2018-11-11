@@ -97,7 +97,7 @@ class Falchion(Sword):
 
 class Glaive(Sword):
     components = {
-        "Blade": damage.Blade,
+        "Blade": damage.BladeCurved,
         "Handle": structure.HandleLonger,
         "Counterweight": damage.Sphere,
     }
@@ -174,9 +174,9 @@ def random_weapon():
     return treasure_core.choose_from(weapons)[0]
 
 
-def test_weapon(minimal=False, mat=None, norecurse=False):
+def test_weapon(minimal=False, mat=None, norecurse=False, images=True):
     for a in weapons:
         for b in a:
             bb = b(override_material=mat)
-            util.describe_item(bb, minimal=minimal, norecurse=norecurse)
+            util.describe_item(bb, minimal=minimal, norecurse=norecurse, images=images)
             # bb.save("weapons/" + bb.__class__.__name__.lower() + ".json")
