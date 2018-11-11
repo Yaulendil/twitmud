@@ -38,8 +38,8 @@ class GripWide(Grip):
 
 class Handle(WPart):
     image = [
-        "   ║   ",
-        "   ║   ",
+        "   ┃   ",
+        "   ┃   ",
     ]
 
     additions = [([None, decor.Carved], [5, 1]), [None, decor.Color]]
@@ -51,11 +51,11 @@ class Handle(WPart):
 
 class HandleLong(Handle):
     image = [
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
     ]
 
     size = 8
@@ -65,17 +65,17 @@ class HandleLong(Handle):
 
 class HandleLonger(Handle):
     image = [
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
-        "   ║   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
+        "   ┃   ",
     ]
 
     size = 14
