@@ -171,6 +171,34 @@ class BladeCurved(Blade):
     TreasureType = "curved blade"
 
 
+class Spike(Damager):
+    """A cone with sharp edges, made for stabbing"""
+
+    image = [
+        "   ▂   ",
+        "  ▗█▖  ",
+        "  ▟█▙  ",
+        " ▗███▖ ",
+        "  ███  ",
+    ]
+
+    additions = [([None, decor.MetalInlay], [5, 1])]
+    size = 8
+    type_damage = {  # Coefficients of each damage type done by this component
+        "Crush": {"Density": 1, "Hardness": 0.5, "Flexibility": -0.2},
+        "Pierce": {"Density": 0.6, "Hardness": 2, "Flexibility": 1},
+        "Slice": {"Density": 0.2, "Hardness": 0.6, "Flexibility": 0.7},
+    }
+    base_damage = 8
+    base_speed = 11
+
+    Effectiveness = 3
+    DamageTypesGood = [1]
+    DamageTypesBad = [0, 2]
+
+    TreasureType = "bladed point"
+
+
 class HeadClub(Damager):
     """A smooth heavy block or cylinder"""
 

@@ -162,10 +162,20 @@ class Halberd(Axe):
     TreasureType = "Halberd"
 
 
+class Pike(Weapon):
+    components = {
+        "Point": damage.Spike,
+        "Handle": structure.HandleLonger,
+        "Counterweight": [None, damage.Sphere],
+    }
+    TreasureType = "Pike"
+    damager = "Point"
+
+
 swords = [Sword, Falchion, Greatsword, Dagger]
 bludgeons = [Club, Mace, Star]
 cleavers = [Axe]
-polearms = [Glaive, MaceCav, Halberd]
+polearms = [Glaive, MaceCav, Halberd, Pike]
 
 weapons = [swords, bludgeons, cleavers, polearms]
 
