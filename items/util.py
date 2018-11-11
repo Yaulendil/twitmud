@@ -18,13 +18,14 @@ def longest_in_list(_list):
     return longest
 
 
-def combine_images(imgs):
+def combine_images(imgs, joint=" "):
     longest = longest_in_list(imgs)
     for img in imgs:
         while len(img) < longest:
             img.append(" " * longest_in_list(img))
-    img_composite = [" │ ".join([p[i] for p in imgs]) for i in range(longest)]
-    return "\n".join(img_composite)
+    img_composite = [joint.join([p[i] for p in imgs]) for i in range(longest)]
+    # return "\n".join(img_composite)
+    return img_composite
 
 
 def title_item(item):
@@ -53,14 +54,21 @@ def item_image(item):
     return line_out
 
 
+def wrap_text(text, indent, limit=50):
+    for i, line in enumerate(text):
+        if len(line) > limit:
+            text[i:i+1] = [line[:limit] + "-", " " * indent + "-" + line[limit:]]
+
+
 def item_description(item, *, top=True, minimal=False, recursive=True, lineset=LINE):
     """Return a list of strings, which, when join()ed by '\n's, display hierarchy"""
     components = item.dictComp
     rail = lineset[1] if components and recursive else lineset[0]
-    line_out = [title_item(item)]
+    line_first = title_item(item)
+    line_out = []
 
     if top:
-        line_out[0] = "This is " + line_out[0] + "."
+        line_first = "This is " + line_first + "."
 
     try:
         # See if it is a weapon object
@@ -69,9 +77,9 @@ def item_description(item, *, top=True, minimal=False, recursive=True, lineset=L
         wgh = item.weight()
         spd = item.speed()
         line_out += [
-            f"{rail}> It does {str([round(i, 2) for i in d])} C/P/S damage for {str(dsum)} ideal-total.",
-            f"{rail}> It has a weight of {str(wgh)} for a speed of {str(spd)}.",
-            f"{rail}> It does {str(round((dsum + spd) / 10, 2))} DPS.",
+            f"> It does {str([round(i, 2) for i in d])} C/P/S damage for {str(dsum)} ideal-total.",
+            f"> It has a weight of {str(wgh)} for a speed of {str(spd)}.",
+            f"> It does {str(round((dsum + spd) / 10, 2))} DPS.",
         ]
     except AttributeError:
         pass
@@ -82,7 +90,7 @@ def item_description(item, *, top=True, minimal=False, recursive=True, lineset=L
         dstr = [str(n) for n in d]
         if sum(d) > 0:
             line_out.append(
-                f"{rail}+ It contributes {dstr} C/P/S damage to its parent."
+                f"+ It contributes {dstr} C/P/S damage to its parent."
             )
     except AttributeError:
         pass
@@ -96,21 +104,27 @@ def item_description(item, *, top=True, minimal=False, recursive=True, lineset=L
 
         # Print object adjectives as a single line
         if adjectives:
-            line_out.append(f"{rail}! It is {grammar.sequence_words(adjectives)}.")
+            line_out.append(f"! It is {grammar.sequence_words(adjectives)}.")
 
         # Print object attributes (variable number)
         for a, v in attributes.items():
             description = grammar.sequence_words(v)
             if description != "":
-                line_out.append(f"{rail}= Its {a.lower()} is {str(description)}.")
+                line_out.append(f"= Its {a.lower()} is {str(description)}.")
 
         # Print object traits (one of each)
         for a, v in traits.items():
-            line_out.append(f"{rail}- Its {a.lower()} is {grammar.sequence_words(v)}.")
+            line_out.append(f"- Its {a.lower()} is {grammar.sequence_words(v)}.")
 
         # Print object embellishments (one of each, as passive verbs)
         for v in additional:
-            line_out.append(f"{rail}* It {v.as_pverb()}.")
+            line_out.append(f"* It {v.as_pverb()}.")
+
+    wrap_text(line_out, 3, 60)
+
+    line_out = [rail + line for line in line_out]
+    if line_first:
+        line_out[0:0] = [line_first]
 
     if recursive:
         for i, v in enumerate(components.items()):

@@ -216,14 +216,18 @@ def random_weapon():
 
 
 def test_weapon(minimal=False, mat=None, norecurse=False, images=True, text=True):
-    imgs = []
+    sets = []
     for a in weapons:
+        imgs = []
         for b in a:
             bb = b(override_material=mat)
             if text:
                 util.describe_item(bb, minimal=minimal, norecurse=norecurse, images=images)
             else:
                 imgs.append(util.item_image(bb))
+        sets.append(imgs)
 
-    if imgs and not text:
-        print(util.combine_images(imgs))
+    if sets and not text:
+        list_of_lists = [util.combine_images(imgs) for imgs in sets]
+        list_of_strings = util.combine_images(list_of_lists, " │ ")
+        print("\n".join(list_of_strings))
