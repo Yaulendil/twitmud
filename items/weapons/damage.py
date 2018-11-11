@@ -126,27 +126,6 @@ class BladeBig(Blade):
     TreasureType = "great blade"
 
 
-class BladeSmall(Blade):
-    """A short flat plane with sharp edges"""
-
-    image = [
-        "   ▂   ",
-        "  ▗█▖  ",
-        "  ▟█▙  ",
-        "  ███  ",
-    ]
-
-    size = 5
-    base_damage = 8
-    base_speed = 11
-
-    Effectiveness = 3
-    DamageTypesGood = [1, 2]
-    DamageTypesBad = [0]
-
-    TreasureType = "small blade"
-
-
 class BladeCurved(Blade):
     """A short flat plane with sharp edges"""
 
@@ -198,27 +177,6 @@ class BladeCurvedBig(Blade):
     DamageTypesBad = [1]
 
     TreasureType = "great curved blade"
-
-
-class BladeCurvedSmall(Blade):
-    """A short flat plane with sharp edges"""
-
-    image = [
-        "  ▄    ",
-        "  █▙   ",
-        "  ██▌  ",
-        "  ███  ",
-    ]
-
-    size = 5
-    base_damage = 8
-    base_speed = 14
-
-    Effectiveness = 4
-    DamageTypesGood = [1, 2]
-    DamageTypesBad = [0]
-
-    TreasureType = "small curved blade"
 
 
 class Spike(Damager):

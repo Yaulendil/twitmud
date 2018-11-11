@@ -95,36 +95,6 @@ class GreatswordCurved(Sword):
     TreasureType = "Curved Greatsword"
 
 
-class Dagger(Sword):
-    components = {
-        "Blade": damage.BladeSmall,
-        "Guard": structure.Roundguard,
-        "Handle": structure.Handle,
-        "Pommel": damage.Sphere,
-    }
-    TreasureType = "Dagger"
-
-
-class DaggerCurved(Sword):
-    components = {
-        "Blade": damage.BladeCurvedSmall,
-        "Guard": structure.Roundguard,
-        "Handle": structure.Handle,
-        "Pommel": damage.Sphere,
-    }
-    TreasureType = "Curved Dagger"
-
-
-class Stiletto(Sword):
-    components = {
-        "Blade": damage.Spike,
-        # "Guard": structure.Roundguard,
-        "Handle": structure.Handle,
-        "Pommel": damage.Sphere,
-    }
-    TreasureType = "Stiletto"
-
-
 class Glaive(Sword):
     components = {
         "Blade": damage.BladeCurved,
@@ -203,7 +173,6 @@ class Pike(Weapon):
 
 
 swords = [Sword, Falchion, Greatsword, GreatswordCurved]
-knives = [Dagger, DaggerCurved, Stiletto]
 bludgeons = [Club, Mace, Star]
 cleavers = [Axe]
 polearms = [Glaive, MaceCav, Halberd, Pike]
