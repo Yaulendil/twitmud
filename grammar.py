@@ -22,6 +22,8 @@ def sequence_words(words, o=""):
     o1 = ""
     if type(words) != list:
         return str(words)
+    while None in words:
+        words.remove(None)
     words = [str(word) for word in words]
     if len(words) == 0:
         pass

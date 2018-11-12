@@ -1,10 +1,12 @@
 from numpy import add as npadd
 
 from . import damage, structure
-from .. import treasure_core
-from .. import util
+from items.treasure_core import TreasureObject
+from items import util
+from selection import choose_from
 
-class Weapon(treasure_core.TreasureObject):
+
+class Weapon(TreasureObject):
     TreasureType = "Generic Weapon"
     BaseType = "weapon"
     damager = None
@@ -12,6 +14,7 @@ class Weapon(treasure_core.TreasureObject):
     def __init__(self, *args, **kwargs):
         # WEAPONS deal damage determined by their components
         super().__init__(self, *args, **kwargs)
+        self.damage = 0
         self.calc_damage()
 
     @property
@@ -181,7 +184,7 @@ weapons = [swords, bludgeons, cleavers, polearms]
 
 
 def random_weapon():
-    return treasure_core.choose_from((weapons, [len(x) for x in weapons]))[0]
+    return choose_from((weapons, [len(x) for x in weapons]))[0]
 
 
 def test_weapon(minimal=False, mat=None, norecurse=False, images=True, text=True):
