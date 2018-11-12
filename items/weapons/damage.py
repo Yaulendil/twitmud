@@ -170,9 +170,9 @@ class BladeCurvedBig(Blade):
 
     size = 14
     base_damage = 12
-    base_speed = 6
+    base_speed = 8
 
-    Effectiveness = 4
+    Effectiveness = 3
     DamageTypesGood = [2]
     DamageTypesBad = [1]
 
