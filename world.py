@@ -2,7 +2,8 @@ import grammar
 
 
 class Room:
-    def __init__(self, descriptor, roomtype="room", outside=False, *arg, **kw):
+    def __init__(self, site, descriptor, roomtype="room", outside=False, *arg, **kw):
+        self.site = site
         self.descriptor = descriptor
         self.roomtype = roomtype
         self.outside = outside
@@ -21,7 +22,7 @@ class Room:
         out = " ".join([self.descriptor, self.roomtype]).strip().lower()
         return grammar.get_a(out, True)
 
-    def inspect(self, item=None):
+    def inspect(self, item=None, viewer=None):
         """This is a method, not a function, so that something will always be described from the point of view of a Room"""
         if item:
             if item in self.doors:
@@ -73,4 +74,5 @@ class Site:
         self.sites = []
 
     def new_room(self, *arg, **kw):
-        new = Room(*arg, **kw)
+        new = Room(self, *arg, **kw)
+        self.rooms.append(new)

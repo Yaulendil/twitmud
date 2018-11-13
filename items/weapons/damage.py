@@ -33,7 +33,7 @@ class Damager(WPart):
     def __init__(self, *a, override_material=None, **kw):
         super().__init__(*a, **kw)
         if override_material:
-            self.material = override_material
+            self._material = override_material
 
     def damage_rating(self, split=True):
         # Amount of damage contributed by this component
@@ -286,8 +286,8 @@ class HeadAxe(Damager):
     image = [
         "█▙ ▄   ",
         "█████▙ ",
-        "█████▛ ",
-        "█▛ █   ",
+        "██████ ",
+        "█▛ █ ▝ ",
     ]
 
     additions = [([None, decor.MetalInlay], [5, 1])]

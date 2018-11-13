@@ -9,7 +9,6 @@ from selection import choose_from
 class Weapon(TreasureObject):
     TreasureType = "Generic Weapon"
     BaseType = "weapon"
-    damager = None
 
     def __init__(self, *args, **kwargs):
         # WEAPONS deal damage determined by their components
@@ -18,26 +17,19 @@ class Weapon(TreasureObject):
         self.calc_damage()
 
     @property
-    def material(self):
-        try:
-            return self.dictComp[self.damager].material
-        except:
-            return None
-
-    @property
     def reach(self):
         try:
             r = self.dictComp["Handle"].size
         except:
             r = 0
         try:
-            r += self.dictComp[self.damager].size
+            r += self.dictComp[self.primary].size
         except:
             pass
         return r
 
     def speed(self, base=None):
-        base = base or self.dictComp[self.damager].base_speed or 10
+        base = base or self.dictComp[self.primary].base_speed or 10
         # speed = (1000 * base / self.weight()) / ((self.reach + 1) / 10)
         speed = (1000 * base) / (self.weight() + self.reach)
         # return speed
@@ -65,7 +57,7 @@ class Sword(Weapon):
         "Pommel": damage.Sphere,
     }
     TreasureType = "Sword"
-    damager = "Blade"
+    primary = "Blade"
 
 
 class Greatsword(Sword):
@@ -116,7 +108,7 @@ class Club(Weapon):
         "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Club"
-    damager = "Head"
+    primary = "Head"
 
 
 class Mace(Club):
@@ -153,12 +145,12 @@ class Axe(Weapon):
         "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Axe"
-    damager = "Head"
+    primary = "Head"
 
 
 class Halberd(Axe):
     components = {
-        "Head": damage.HeadAxe,
+        "Head": damage.HeadHalberd,
         "Handle": structure.HandleLonger,
         "Counterweight": [None, damage.Sphere],
     }
@@ -172,7 +164,7 @@ class Pike(Weapon):
         "Counterweight": [None, damage.Sphere],
     }
     TreasureType = "Pike"
-    damager = "Point"
+    primary = "Point"
 
 
 swords = [Sword, Falchion, Greatsword, GreatswordCurved]

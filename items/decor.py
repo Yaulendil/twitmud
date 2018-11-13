@@ -8,7 +8,7 @@ from items import materials
 
 
 class Decor:
-    value_add = 2
+    value_add = 1
     __adj__ = "Decorated"
     materials = []
     material_restrict = []
@@ -88,3 +88,7 @@ class Color(Decor):
         elif self.applied_to in materials.Wood.all:
             verb = "stained"
         return "is {} {}".format(verb, self.color)
+
+
+class Signature(Decor):
+    __adj__ = "Signed"

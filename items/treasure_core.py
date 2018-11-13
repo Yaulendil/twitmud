@@ -47,6 +47,10 @@ class TreasureObject:
     BaseType = "item"
     size = 3
 
+    # If this item is a composite item, primary should be the name of the "main" part;
+    # For example, the blade of a sword, or the bottle of a beverage
+    primary = None
+
     def __init__(self, *args, material=None, **kwargs):
         self.dictAttr = {}
         self.dictTrait = {}
@@ -55,7 +59,7 @@ class TreasureObject:
         self.decor = []
 
         try:
-            self.material = (
+            self._material = (
                 (material or choose_from(self.materials)[0]) if self.materials else None
             )
         except:
@@ -90,6 +94,11 @@ class TreasureObject:
             c = choice(*args, **kwargs)
             self.dictComp[comp] = c
         shuffle(self)
+
+    @property
+    def material(self):
+        mat = getattr(self.dictComp.get(self.primary, None), "_material", None)
+        return mat or getattr(self, "_material", None)
 
     def get_adj(self, other=None):
         adjs = []

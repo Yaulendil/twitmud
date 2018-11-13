@@ -43,7 +43,7 @@ class Fluid(TreasureObject):
             "violet",
             "amethyst",
             "black",
-            "tar",
+            "tarry",
             "pitch",
             "coal",
             "white",
@@ -85,10 +85,28 @@ class FluidWater(Fluid):
     # TreasureType = "water"
 
 
+class Stopper(TreasureObject):
+    materials = materials.Wood.all
+
+    image = [
+        "   ▃   ",
+    ]
+
+    TreasureType = "stopper"
+    size = 1
+
+
 class Bottle(TreasureObject):
-    materials = materials.Metal.decor
-    components = {"Content": Fluid,
-                  "Other content": Fluid}
+    materials = materials.Metal.decor + materials.Fragile.all
+
+    image = [
+        "   █   ",
+        " ▗▟█▙▖ ",
+        " █████ ",
+        " ▒▒▒▒▒ ",
+        " ▜███▛ ",
+    ]
+
     traits = {
         "Fullness": range(20, 100, 5),
         # "Vessel":["bottle","flask","vial"],
@@ -103,29 +121,38 @@ class Bottle(TreasureObject):
         ],
     }
     TreasureType = "bottle"
-
-    # def desc(self, solo=True, pad=""):
-    # o = "The {Shape} {Material} {Vessel} is {Fullness}% full.".format(**self.attrDict)
-    # for sub in self.compDict:
-    # o += "\n    " + self.compDict[sub].describe().replace("fluid","fluid within")
-    # return o
-
-    # def describe(self, solo=True, pad=""):
-    # o = self.desc(solo,pad)
-    # return o
+    size = 3
 
 
 class Flask(Bottle):
+    image = [
+        "  ▗█▖  ",
+        " ▟███▙ ",
+        " ▒▒▒▒▒ ",
+        " ▜███▛ ",
+    ]
+
     TreasureType = "flask"
 
 
 class Vial(Bottle):
+    image = [
+        "   █   ",
+        " ▗███▖ ",
+        " ▒▒▒▒▒ ",
+        " ▜███▛ ",
+    ]
+
     TreasureType = "vial"
 
 
 class Potion(TreasureObject):
-    components = {"Bottle": [Bottle, Flask, Vial]}
+    components = {"Closure": Stopper,
+                  "Vessel": [Bottle, Flask, Vial],
+                  "Content": Fluid,}
+
     TreasureType = "potion"
+    primary = "Vessel"
 
 
 class BottleWater(Bottle):
