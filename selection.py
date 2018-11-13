@@ -1,4 +1,4 @@
-from numpy import random as npr
+from numpy import random as npr, array
 
 
 def normalize(in_):
@@ -23,6 +23,11 @@ def choose_from(choices, q=1, probability: list = None):
 
     if not probability:
         probability = prob or [1 for _ in choices]
+
+    reshaped = array([None] * len(choices), dtype=object)
+    for i, p in enumerate(choices):
+        reshaped[i] = p
+    choices = reshaped
 
     choice: list = npr.choice(
         choices, size=q, replace=False, p=normalize(probability)

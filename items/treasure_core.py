@@ -57,6 +57,7 @@ class TreasureObject:
         self.dictComp = {}
         self.adjectives = []
         self.decor = []
+        self.flags = set()
 
         try:
             self._material = (

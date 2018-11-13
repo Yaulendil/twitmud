@@ -14,6 +14,9 @@ class Fragile(Material):
         "burn": ["singed", "charred", "melted"],
     }
 
+    clear = []
+    opaque = []
+
 
 class Glass(Fragile):
     __adj__ = "Glass"
@@ -36,3 +39,5 @@ class Obsidian(Fragile):
 
 
 Fragile.all = [Glass, Crystal, Porcelain, Ceramic, Obsidian]
+Fragile.clear = [Glass, Crystal]
+Fragile.opaque = [Porcelain, Ceramic, Obsidian]

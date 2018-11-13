@@ -10,7 +10,11 @@ from items import materials
 class Decor:
     value_add = 1
     __adj__ = "Decorated"
+
+    # These are the only materials this can BE (Blank is NONE)
     materials = []
+
+    # These are the only materials this can GO ON (Blank is ANY)
     material_restrict = []
 
     def __init__(self, applied=None, material=None):
@@ -29,38 +33,78 @@ class Decor:
         return o
 
 
+#####################
+# Metal Decorations #
+#####################
+
+
 class MetalInlay(Decor):
+    """A design is etched into the object and metal is put in the etching"""
+
     value_add = 3
     __adj__ = "Inlaid"
     materials = materials.Metal.decor
 
 
 class MetalPlating(Decor):
+    """The surface of this object is a thin layer of decorative metal"""
+
     value_add = 2.5
     __adj__ = "Plated"
     materials = materials.Metal.decor
 
 
+class MetalFoil(Decor):
+    """Foil wrapping, like a Champagne bottle"""
+
+    value_add = 2.5
+    __adj__ = "foil-wrapped"
+    materials = materials.Metal.decor
+
+    def as_pverb(self):
+        o = f"is {self.__adj__.lower()}"
+        if self.material:
+            o += f" with {self.material.__name__.lower()} foil"
+        return o
+
+
 class GemEncrust(Decor):
+    """Small gemstones are embedded into the surface of this object"""
+
     value_add = 5
     __adj__ = "Encrusted"
     materials = materials.Gemstone.all
 
 
+#########################
+# Intrinsic Decorations #
+#########################
+
+
 class Carved(Decor):
+    """This wooden object is carved with very intricate designs"""
+
     value_add = 1.5
     __adj__ = "Intricately Carved"
     material_restrict = materials.Wood.all
 
 
 class Woven(Decor):
+    """This textile surface is composed of straps or bands, neatly woven together"""
+
     value_add = 1.5
     __adj__ = "Finely Woven"
     material_restrict = materials.Textile.all
 
 
+########################
+# Additive Decorations #
+########################
+
+
 class Color(Decor):
-    value_add = 1
+    """Paint, dye, stain..."""
+
     __adj__ = "Painted"
     material_restrict = materials.Wood.all + materials.Textile.all
     colors = [
@@ -91,4 +135,36 @@ class Color(Decor):
 
 
 class Signature(Decor):
+    """Signed by someone important"""
+
     __adj__ = "Signed"
+
+    def __init__(self, *a, signatory=None, **kw):
+        super().__init__(*a, **kw)
+        self.text = signatory
+
+    def as_pverb(self):
+        o = f"has been {self.__adj__.lower()}"
+        if self.text:
+            o += f" by '{self.text}'"
+        else:
+            o += ", but the text is illegible"
+        return o
+
+
+class Label(Decor):
+    """A small tag is attached"""
+
+    __adj__ = "Labelled"
+
+    def __init__(self, *a, text=None, **kw):
+        super().__init__(*a, **kw)
+        self.text = text
+
+    def as_pverb(self):
+        o = f"is {self.__adj__.lower()}"
+        if self.text:
+            o += f", '{self.text}'"
+        else:
+            o += ", but the text is illegible"
+        return o
