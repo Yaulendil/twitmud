@@ -29,6 +29,7 @@ class Grip(WPart):
     size = 0.5
     materials = materials.Textile.common
     TreasureType = "simple wrapping"
+    class_flags = ["CAN_REMOVE", "CANNOT_ATTACH"]
 
 
 class GripWide(Grip):

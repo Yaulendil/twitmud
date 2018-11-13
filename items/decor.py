@@ -11,6 +11,7 @@ from items import materials
 class Decor:
     value_add = 1
     __adj__ = "Decorated"
+    removable = False  # Can it be removed by hand, without tools?
 
     # These are the only materials this can BE (Blank is NONE)
     materials = []
@@ -61,6 +62,7 @@ class MetalFoil(Decor):
 
     value_add = 2.5
     __adj__ = "foil-wrapped"
+    removable = True
     materials = materials.Metal.decor
 
     def as_pverb(self):
@@ -110,6 +112,7 @@ class Basket(Decor):
     """This glass bottle has a straw wrapping around the base"""
 
     __adj__ = "Basketed"
+    removable = True
     material_restrict = materials.Fragile.clear
 
     def as_pverb(self):
@@ -170,6 +173,7 @@ class Label(Decor):
     """A small tag is attached"""
 
     __adj__ = "Labelled"
+    removable = True
 
     def __init__(self, *a, text=None, **kw):
         super().__init__(*a, **kw)

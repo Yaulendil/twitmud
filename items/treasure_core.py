@@ -45,6 +45,7 @@ class TreasureObject:
 
     TreasureType = "Generic Treasure"
     BaseType = "item"
+    class_flags = []
     size = 3
 
     # If this item is a composite item, primary should be the name of the "main" part;
@@ -57,7 +58,9 @@ class TreasureObject:
         self.dictComp = {}
         self.adjectives = []
         self.decor = []
-        self.flags = set()
+
+        # Going to experiment with Dwarf Fortress style tokens here
+        self.flags = set(self.class_flags)
 
         try:
             self._material = (

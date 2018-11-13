@@ -25,7 +25,7 @@ def wine_label():
 
 
 class Stopper(TreasureObject):
-    materials = materials.Wood.all
+    materials = [materials.Cork] + materials.Fragile.clear
 
     image = ["   ▃   "]
 
@@ -34,6 +34,7 @@ class Stopper(TreasureObject):
         ([None, decor.MetalFoil], [10, 1]),
     ]
     TreasureType = "stopper"
+    class_flags = ["CAN_REMOVE"]
     size = 1
 
 
@@ -47,6 +48,7 @@ class CrownCap(TreasureObject):
         ([None, decor.MetalFoil], [10, 1]),
     ]
     TreasureType = "crown cap"
+    class_flags = ["CAN_REMOVE", "CANNOT_ATTACH"]
     size = 1
 
 
@@ -60,6 +62,7 @@ class ScrewCap(TreasureObject):
         ([None, decor.MetalFoil], [10, 1]),
     ]
     TreasureType = "screw cap"
+    class_flags = ["CAN_REMOVE"]
     size = 1
 
 
