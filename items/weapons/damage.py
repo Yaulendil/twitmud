@@ -300,3 +300,24 @@ class HeadAxe(Damager):
     Effectiveness = 4
     DamageTypesGood = [0, 2]
     TreasureType = "crescent blade"
+
+
+class HeadHalberd(HeadAxe):
+    """An axe blade with an additional spike"""
+
+    image = [
+        "   ▄   ",
+        "█▙ █   ",
+        "█████▙ ",
+        "██████ ",
+        "█▛ █ ▝ ",
+    ]
+
+    size = 8
+    type_damage = {  # Coefficients of each damage type done by this component
+        "Crush": {"Density": 0.8, "Hardness": 0.1, "Flexibility": -0.2},
+        "Pierce": {"Density": 0.5, "Hardness": 1, "Flexibility": 0.5},
+        "Slice": {"Density": 1, "Hardness": 1.2, "Flexibility": 0.6},
+    }
+    Effectiveness = 3
+
