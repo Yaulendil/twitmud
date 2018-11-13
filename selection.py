@@ -1,9 +1,14 @@
-from numpy import random as npr, array
+from numpy import random as npr
 
 
 def normalize(in_):
     s = sum(in_)
     return [float(i) / s for i in in_]
+
+
+def sample_with_replacement(l, n, weights):
+    idxs = npr.choice(range(len(l)), n, p=weights, replace=False)
+    return [l[i] for i in idxs]
 
 
 def choose_from(choices, q=1, probability: list = None):
@@ -24,14 +29,8 @@ def choose_from(choices, q=1, probability: list = None):
     if not probability:
         probability = prob or [1 for _ in choices]
 
-    reshaped = array([None] * len(choices), dtype=object)
-    for i, p in enumerate(choices):
-        reshaped[i] = p
-    choices = reshaped
+    choice: list = sample_with_replacement(choices, q, normalize(probability))
 
-    choice: list = npr.choice(
-        choices, size=q, replace=False, p=normalize(probability)
-    ).tolist()
     for i in range(len(choice)):
         if type(choice[i]) == tuple:
             # If a tuple, 0 is list and 1 is prob; Choose
