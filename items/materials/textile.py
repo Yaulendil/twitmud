@@ -28,6 +28,7 @@ class Textile(Material):
 
 
 class Leather(Textile):
+    Toughness = 60
     __adj__ = "Leather"
 
 

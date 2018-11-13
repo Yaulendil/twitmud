@@ -5,6 +5,7 @@ Decor has no impact on stats.
 """
 from selection import choose_from
 from items import materials
+# from .treasure_core import TreasureObject
 
 
 class Decor:
@@ -36,6 +37,7 @@ class Decor:
 #####################
 # Metal Decorations #
 #####################
+# These involve metal
 
 
 class MetalInlay(Decor):
@@ -79,6 +81,7 @@ class GemEncrust(Decor):
 #########################
 # Intrinsic Decorations #
 #########################
+# These have been done to the object to permanently alter it
 
 
 class Carved(Decor):
@@ -100,6 +103,17 @@ class Woven(Decor):
 ########################
 # Additive Decorations #
 ########################
+# These are things that have been added to the object
+
+
+class Basket(Decor):
+    """This glass bottle has a straw wrapping around the base"""
+
+    __adj__ = "Basketed"
+    material_restrict = materials.Fragile.clear
+
+    def as_pverb(self):
+        return "has a straw basket around it"
 
 
 class Color(Decor):
@@ -164,7 +178,7 @@ class Label(Decor):
     def as_pverb(self):
         o = f"is {self.__adj__.lower()}"
         if self.text:
-            o += f", '{self.text}'"
+            o += f", \"{self.text}\""
         else:
             o += ", but the text is illegible"
         return o

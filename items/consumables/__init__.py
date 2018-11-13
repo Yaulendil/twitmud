@@ -1,6 +1,6 @@
 from items.treasure_core import TreasureObject
 from items import materials, decor
-
+from selection import choose_from
 from . import fluid
 
 
@@ -10,6 +10,13 @@ Labels = [
     ["Healing", "Death", "Poison"],
     ["XXX", "???", "!!!"],
 ]
+
+
+def wine_label():
+    brands = ["O'Malley's", "Steady Hand McDuff's", "Undertaker", "Trés Comas"]
+    names = ["Finest", "Special Reserve", "Dry", "VSOP"]
+    years = range(1911, 2003)
+    return " ".join([choose_from(brands)[0], choose_from(names)[0], str(choose_from(years)[0])])
 
 
 ############
@@ -87,6 +94,9 @@ class Bottle(TreasureObject):
             "icosahedric",
         ],
     }
+    additions = [
+        ([None, decor.Basket], [6, 1]),
+    ]
     TreasureType = "bottle"
     size = 3
 
@@ -112,7 +122,7 @@ class Vial(Bottle):
 ##################
 
 
-class Potion(TreasureObject):
+class BottledLiquid(TreasureObject):
     components = {
         "Closure": [Stopper, CrownCap, ScrewCap, FlipTop],
         "Vessel": [Bottle, Flask, Vial],
@@ -121,6 +131,22 @@ class Potion(TreasureObject):
     TreasureType = "container"
     primary = "Vessel"
 
-    def __init__(self, *arg, content=None, **kw):
+    def __init__(self, *arg, content=None, label=None, **kw):
         super().__init__(*arg, **kw)
         self.dictComp["Content"] = content
+        if label is True:
+            label = choose_from(Labels)[0]
+        if label:
+            self.decor.append(decor.Label(text=label))
+
+
+def bottle_water():
+    return BottledLiquid(content=fluid.Water(), label="Water")
+
+
+def bottle_wine():
+    return BottledLiquid(content=fluid.Wine(), label=wine_label())
+
+
+def bottle_potion():
+    return BottledLiquid(content=fluid.Potion(), label=True)

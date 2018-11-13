@@ -63,4 +63,4 @@ class Cork(Wood):
 
 
 Wood.all = [Oak, Elm, Maple, Redwood, Willow, Mahogany, Spruce, Cork]
-Wood.structure = [Oak, Spruce, Maple]
+Wood.structure = [Oak, Spruce, Maple, Willow]

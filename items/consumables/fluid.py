@@ -10,6 +10,9 @@ class Fluid(TreasureObject):
     TreasureType = "unknown fluid"
     BaseType = "fluid"
 
+    def __init__(self, *arg, **kw):
+        super().__init__(*arg, **kw)
+
 
 class Water(Fluid):
     pass

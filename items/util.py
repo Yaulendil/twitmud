@@ -121,8 +121,10 @@ def item_description(item, *, top=True, minimal=False, recursive=True, lineset=L
                 line_out.append(f"- Its {a.lower()} is {grammar.sequence_words(v)}.")
 
             # Print object embellishments (one of each, as passive verbs)
-            for v in additional:
-                line_out.append(f"* It {v.as_pverb()}.")
+            # for v in additional:
+            #     line_out.append(f"* It {v.as_pverb()}.")
+            if additional:
+                line_out.append("* It {}.".format(grammar.sequence_words([v.as_pverb() for v in additional])))
 
     wrap_text(line_out, 3, 60)
 
