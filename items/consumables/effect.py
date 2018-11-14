@@ -1,10 +1,6 @@
 import datetime as dt
 
 
-def smaller(a, b):
-    return a if a <= b else b
-
-
 class Effect:
     verb = "is experiencing effects"
 
@@ -14,7 +10,7 @@ class Effect:
     def __init__(self, subject, duration, interval=0, strength=1):
         self.time_start = dt.datetime.now()
         self.tick_last = self.time_start
-        self._duration = smaller(self.time_max, duration or 1000) * self.time_mult
+        self._duration = min(self.time_max, duration or 1000) * self.time_mult
         self._interval = interval or self._duration / 5
 
         self.strength = strength
@@ -39,7 +35,7 @@ class Effect:
         last = since or self.tick_last
         now = to or dt.datetime.now()
         ticks = 0
-        while last + (self.interval * (ticks + 1)) < smaller(now, self.time_end):
+        while last + (self.interval * (ticks + 1)) < min(now, self.time_end):
             ticks += 1
         return ticks
 
