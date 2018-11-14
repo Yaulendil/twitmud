@@ -1,12 +1,25 @@
 import grammar
+import dungeontime
+
+
+def do_move(character, destination):
+    room = character.location
+    room.occupants.remove(character)
+    character.location = destination
+    destination.occupants.append(character)
 
 
 class Room:
-    def __init__(self, site, descriptor, roomtype="room", outside=False, *arg, **kw):
+    def __init__(self, site, descriptor, roomtype="room", outside=False, light=0, *arg, **kw):
         self.site = site
         self.descriptor = descriptor
         self.roomtype = roomtype
+
         self.outside = outside
+        self.light = light
+            # 0: Dark
+            # 1: Daylight
+            # 2: Light
 
         self.doors = []
         self.floor = []
@@ -26,28 +39,32 @@ class Room:
         """This is a method, not a function, so that something will always be described from the point of view of a Room"""
         if item:
             if item in self.doors:
+                # Describe the door, and possibly, the room beyond
                 new = item["type"]
                 if item["open"]:
                     new += " On the other side you can see {}.".format(
                         item["dest"].inspect_tersely()
                     )
-                    if item["dest"].floor or item["dest"].occupants:
-                        words = [
-                            "items" if item["dest"].floor else None,
-                            "people" if item["dest"].occupants else None,
-                        ]
+                    words = [
+                        "items" if item["dest"].floor else None,
+                        "living things" if item["dest"].occupants else None,
+                    ]
+                    if words:
                         new += " There are {} there.".format(
                             grammar.sequence_words(words)
                         )
             else:
-                # TODO: Simply state the object name (with a/an)
+                # Simply state the object name (with a/an)
                 new = grammar.get_a(
                     " ".join([self.descriptor, self.roomtype]).strip().lower(), True
                 )
             return new
         else:
-            # TODO: Describe the room
-            pass
+            # Describe the room
+            if not self.light or (self.light == 1 and not dungeontime.is_day()):
+                return "It is quite dark."
+            else:
+                pass
 
 
 def door_new(a: Room, b: Room, adjective="", pathtype="door"):
