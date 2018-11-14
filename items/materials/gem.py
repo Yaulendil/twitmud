@@ -13,7 +13,7 @@ class Gemstone(Material):
         "phys": ["scratched", "cracked", "crushed"],
         # "burn": ["singed", "charred", "melted"],
     }
-    __adj__ = "Gem"
+    adj = "Gem"
 
 
 class Ruby(Gemstone):

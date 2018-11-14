@@ -36,7 +36,7 @@ def title_item(item):
     given_name = item.TreasureLabel
 
     if item.material:
-        core_name = " ".join([item.material.__adj__.lower(), core_name])
+        core_name = " ".join([item.material.adj.lower(), core_name])
 
     adjs = item.adjectives
     if adjs:

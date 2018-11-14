@@ -18,7 +18,7 @@ class Metal(Material):
             "sanguinated",
         ],
     }
-    __adj__ = "Metal"
+    adj = "Metal"
 
 
 class Iron(Metal):
@@ -28,7 +28,7 @@ class Iron(Metal):
     Hardness = 100
     Toughness = 100
     Flexibility = 100
-    __adj__ = "Iron"
+    adj = "Iron"
 
 
 class Steel(Metal):
@@ -38,7 +38,7 @@ class Steel(Metal):
     Hardness = 200
     Toughness = 200
     Flexibility = 100
-    __adj__ = "Steel"
+    adj = "Steel"
 
 
 class Brass(Metal):
@@ -48,7 +48,7 @@ class Brass(Metal):
     Hardness = 60
     Toughness = 130
     Flexibility = 50
-    __adj__ = "Brass"
+    adj = "Brass"
 
 
 class Bronze(Metal):
@@ -58,7 +58,7 @@ class Bronze(Metal):
     Hardness = 95
     Toughness = 90
     Flexibility = 120
-    __adj__ = "Brazen"
+    adj = "Brazen"
 
 
 class Copper(Metal):
@@ -68,7 +68,7 @@ class Copper(Metal):
     Hardness = 80
     Toughness = 75
     Flexibility = 130
-    __adj__ = "Copper"
+    adj = "Copper"
 
 
 class Silver(Metal):
@@ -78,7 +78,7 @@ class Silver(Metal):
     Hardness = 50
     Toughness = 85
     Flexibility = 100
-    __adj__ = "Silver"
+    adj = "Silver"
 
 
 class Gold(Metal):
@@ -88,7 +88,7 @@ class Gold(Metal):
     Hardness = 30
     Toughness = 80
     Flexibility = 100
-    __adj__ = "Golden"
+    adj = "Golden"
 
 
 class Mithril(Metal):
@@ -98,7 +98,7 @@ class Mithril(Metal):
     Hardness = 400
     Toughness = 200
     Flexibility = 150
-    __adj__ = "Mithril"
+    adj = "Mithril"
 
 
 class Adamantium(Metal):
@@ -108,7 +108,7 @@ class Adamantium(Metal):
     Hardness = 70
     Toughness = 220
     Flexibility = 20
-    __adj__ = "Adamantine"
+    adj = "Adamantine"
 
 
 Metal.all = [Iron, Steel, Copper, Bronze, Silver, Gold, Mithril, Adamantium]

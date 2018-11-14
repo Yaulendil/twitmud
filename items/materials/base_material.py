@@ -21,7 +21,7 @@ class Material:
             "sanguinated",
         ],
     }
-    __adj__ = "Physical"
+    adj = "Physical"
 
     def __init__(self, amount):
         self.amount = amount

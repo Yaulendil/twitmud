@@ -24,42 +24,42 @@ class Wood(Material):
             "sanguinated",
         ],
     }
-    __adj__ = "Wooden"
+    adj = "Wooden"
 
 
 class Oak(Wood):
-    __adj__ = "Oaken"
+    adj = "Oaken"
 
 
 class Elm(Wood):
-    __adj__ = "Elm"
+    adj = "Elm"
 
 
 class Maple(Wood):
-    __adj__ = "Maple"
+    adj = "Maple"
 
 
 class Redwood(Wood):
-    __adj__ = "Redwood"
+    adj = "Redwood"
 
 
 class Willow(Wood):
-    __adj__ = "Willow"
+    adj = "Willow"
 
 
 class Mahogany(Wood):
-    __adj__ = "Mahogany"
+    adj = "Mahogany"
 
 
 class Spruce(Wood):
-    __adj__ = "Spruce"
+    adj = "Spruce"
 
 
 class Cork(Wood):
     Density = 2
     Hardness = 10
     Toughness = 10
-    __adj__ = "Cork"
+    adj = "Cork"
 
 
 Wood.all = [Oak, Elm, Maple, Redwood, Willow, Mahogany, Spruce, Cork]

@@ -24,33 +24,33 @@ class Textile(Material):
             "sanguinated",
         ],
     }
-    __adj__ = "Textile"
+    adj = "Textile"
 
 
 class Leather(Textile):
     Toughness = 60
-    __adj__ = "Leather"
+    adj = "Leather"
 
 
 class Silk(Textile):
     Toughness = 15
-    __adj__ = "Silken"
+    adj = "Silken"
 
 
 class Cotton(Textile):
-    __adj__ = "Cotton"
+    adj = "Cotton"
 
 
 class Linen(Textile):
-    __adj__ = "Linen"
+    adj = "Linen"
 
 
 class Canvas(Textile):
-    __adj__ = "Canvas"
+    adj = "Canvas"
 
 
 class Wool(Textile):
-    __adj__ = "Woollen"
+    adj = "Woollen"
 
 
 Textile.all = [Leather, Silk, Cotton, Linen, Canvas, Wool]

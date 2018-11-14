@@ -19,28 +19,28 @@ class Fragile(Material):
 
 
 class Glass(Fragile):
-    __adj__ = "Glass"
+    adj = "Glass"
 
 
 class Crystal(Fragile):
     Hardness = 30
-    __adj__ = "Crystal"
+    adj = "Crystal"
 
 
 class Porcelain(Fragile):
     Hardness = 20
     Toughness = 5
-    __adj__ = "Porcelain"
+    adj = "Porcelain"
 
 
 class Ceramic(Fragile):
     Toughness = 20
-    __adj__ = "Ceramic"
+    adj = "Ceramic"
 
 
 class Obsidian(Fragile):
     Hardness = 200
-    __adj__ = "Obsidian"
+    adj = "Obsidian"
 
 
 Fragile.all = [Glass, Crystal, Porcelain, Ceramic, Obsidian]

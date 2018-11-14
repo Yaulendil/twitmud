@@ -10,7 +10,7 @@ from items import materials
 
 class Decor:
     value_add = 1
-    __adj__ = "Decorated"
+    adj = "Decorated"
     removable = False  # Can it be removed by hand, without tools?
 
     # These are the only materials this can BE (Blank is NONE)
@@ -29,7 +29,7 @@ class Decor:
             self.material = None
 
     def as_pverb(self):
-        o = f"is {self.__adj__.lower()}"
+        o = f"is {self.adj.lower()}"
         if self.material:
             o += f" with {self.material.__name__.lower()}"
         return o
@@ -45,7 +45,7 @@ class MetalInlay(Decor):
     """A design is etched into the object and metal is put in the etching"""
 
     value_add = 3
-    __adj__ = "Inlaid"
+    adj = "Inlaid"
     materials = materials.Metal.decor
 
 
@@ -53,7 +53,7 @@ class MetalPlating(Decor):
     """The surface of this object is a thin layer of decorative metal"""
 
     value_add = 2.5
-    __adj__ = "Plated"
+    adj = "Plated"
     materials = materials.Metal.decor
 
 
@@ -61,12 +61,12 @@ class MetalFoil(Decor):
     """Foil wrapping, like a Champagne bottle"""
 
     value_add = 2.5
-    __adj__ = "foil-wrapped"
+    adj = "foil-wrapped"
     removable = True
     materials = materials.Metal.decor
 
     def as_pverb(self):
-        o = f"is {self.__adj__.lower()}"
+        o = f"is {self.adj.lower()}"
         if self.material:
             o += f" with {self.material.__name__.lower()} foil"
         return o
@@ -76,7 +76,7 @@ class GemEncrust(Decor):
     """Small gemstones are embedded into the surface of this object"""
 
     value_add = 5
-    __adj__ = "Encrusted"
+    adj = "Encrusted"
     materials = materials.Gemstone.all
 
 
@@ -90,7 +90,7 @@ class Carved(Decor):
     """This wooden object is carved with very intricate designs"""
 
     value_add = 1.5
-    __adj__ = "Intricately Carved"
+    adj = "Intricately Carved"
     material_restrict = materials.Wood.all
 
 
@@ -98,7 +98,7 @@ class Woven(Decor):
     """This textile surface is composed of straps or bands, neatly woven together"""
 
     value_add = 1.5
-    __adj__ = "Finely Woven"
+    adj = "Finely Woven"
     material_restrict = materials.Textile.all
 
 
@@ -111,7 +111,7 @@ class Woven(Decor):
 class Basket(Decor):
     """This glass bottle has a straw wrapping around the base"""
 
-    __adj__ = "Basketed"
+    adj = "Basketed"
     removable = True
     material_restrict = materials.Fragile.clear
 
@@ -122,7 +122,7 @@ class Basket(Decor):
 class Color(Decor):
     """Paint, dye, stain..."""
 
-    __adj__ = "Painted"
+    adj = "Painted"
     material_restrict = materials.Wood.all + materials.Textile.all
     colors = [
         ["red", "crimson", "scarlet", "ruby"],
@@ -154,14 +154,14 @@ class Color(Decor):
 class Signature(Decor):
     """Signed by someone important"""
 
-    __adj__ = "Signed"
+    adj = "Signed"
 
     def __init__(self, *a, signatory=None, **kw):
         super().__init__(*a, **kw)
         self.text = signatory
 
     def as_pverb(self):
-        o = f"has been {self.__adj__.lower()}"
+        o = f"has been {self.adj.lower()}"
         if self.text:
             o += f" by '{self.text}'"
         else:
@@ -172,7 +172,7 @@ class Signature(Decor):
 class Label(Decor):
     """A small tag is attached"""
 
-    __adj__ = "Labelled"
+    adj = "Labelled"
     removable = True
 
     def __init__(self, *a, text=None, **kw):
@@ -180,7 +180,7 @@ class Label(Decor):
         self.text = text
 
     def as_pverb(self):
-        o = f"is {self.__adj__.lower()}"
+        o = f"is {self.adj.lower()}"
         if self.text:
             o += f", \"{self.text}\""
         else:
